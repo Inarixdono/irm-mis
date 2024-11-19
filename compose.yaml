@@ -2,5 +2,11 @@ services:
   server:
     build:
       context: .
+    environment:
+      - DATABASE_URI
     ports:
       - 8000:8000
+    develop:
+      watch:
+        - action: rebuild
+          path: .
