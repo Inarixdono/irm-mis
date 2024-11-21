@@ -1,23 +1,17 @@
 from sqlmodel import SQLModel, Field
-from datetime import date
+from datetime import date, datetime
 
-class IdentificationDocument(SQLModel):
-    type: str
-    number: str
-    
 class Address(SQLModel):
-    street: str
-    city: str
-    state: str
-    zip_code: str
-    country: str
-    reference: str
-
-class Person(SQLModel):
-    name: str
-    surname: str
-    birthdate: date
-    gender: str
-    identification_document: IdentificationDocument
-    phone_number: str
-    address: str
+    street: str | None = Field(default=None, max_length=100)
+    city: str | None = Field(default=None, max_length=100)
+    state: str | None = Field(default=None, max_length=100)
+    zip_code: str | None = Field(default=None, max_length=5)
+    country: str | None = Field(default=None, max_length=100)
+    reference: str | None = Field(default=None, max_length=100)
+    
+class Audit(SQLModel):
+    is_active: bool = True
+    created_by: int | None = Field(default=None)
+    created_at: datetime = Field(default=datetime.now())
+    updated_by: int | None = None
+    updated_at: datetime | None = None
