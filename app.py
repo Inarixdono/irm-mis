@@ -1,10 +1,11 @@
 from fastapi import FastAPI
-from controller import user
+from controller import branch, person
 from core.database import init_db
 
 app = FastAPI(lifespan=init_db)
 
-app.include_router(user.router)
+app.include_router(person.router)
+app.include_router(branch.router)
 
 @app.get("/")
 async def root():
