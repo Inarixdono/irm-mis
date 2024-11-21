@@ -1,7 +1,7 @@
-from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
 from typing import Annotated
 from core.config import settings
+from fastapi import Depends, FastAPI
 from sqlmodel import Session, create_engine, SQLModel
 
 engine = create_engine(settings.DATABASE_URI)
