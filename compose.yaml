@@ -3,10 +3,16 @@ services:
     build:
       context: .
     environment:
-      - DATABASE_URI
+      - DATABASE_DEVELOPMENT: /run/secrets/db_development
+    secrets:
+      - db_development
     ports:
       - 8000:8000
     develop:
       watch:
         - action: rebuild
           path: .
+
+secrets:
+  db_development:
+    environment: "DATABASE_DEVELOPMENT"
