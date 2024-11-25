@@ -3,7 +3,7 @@ services:
     build:
       context: .
     environment:
-      - DATABASE_DEVELOPMENT: /run/secrets/db_development
+      DATABASE_DEVELOPMENT: ${DATABASE_DEVELOPMENT}
     secrets:
       - db_development
     ports:
@@ -15,4 +15,4 @@ services:
 
 secrets:
   db_development:
-    environment: "DATABASE_DEVELOPMENT"
+    environment: DATABASE_DEVELOPMENT
