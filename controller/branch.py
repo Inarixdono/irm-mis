@@ -9,6 +9,10 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+@router.get("/{id}", response_model=BranchOut)
+async def read_branch(id: int, service: Annotated[BranchService, Depends()]):
+    return service.read(Branch, id)
+
 @router.post("/", response_model=BranchOut)
 async def create_branch(branch: BranchIn, service: Annotated[BranchService, Depends()]):
     return service.create(Branch, branch)
