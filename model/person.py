@@ -1,8 +1,8 @@
 from datetime import date
 from sqlmodel import SQLModel, Field
-from .types import Address
+from .types import Address, Audit
 
-class PersonIn(Address, SQLModel):
+class PersonIn(Address, Audit, SQLModel):
     name: str = Field(max_length=100)
     surname: str | None = Field(default=None, max_length=100)
     birthdate: date | None = None
