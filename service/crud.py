@@ -1,8 +1,13 @@
 from core.database import SessionDependency, SQLModel
+from sqlmodel import select
 
 class CRUD:
     def __init__(self, session: SessionDependency):
         self.session = session
+        
+    def read(self, base_model: SQLModel, id: int):
+        statement = select(base_model).where(base_model.id == id)
+        return self.session.exec(statement).first()
         
     def create(self, base_model: SQLModel, model_in: SQLModel):
         resource = base_model(**model_in.model_dump())
