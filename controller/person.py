@@ -1,5 +1,5 @@
 from typing import Annotated
-from model.person import PersonIn, Person, PersonOut
+from model.person import PersonIn, PersonOut, Person
 from service.person import Person as PersonService
 from fastapi import APIRouter, Depends
 
@@ -11,4 +11,4 @@ router = APIRouter(
         
 @router.post("/", response_model=PersonOut)
 async def create_person(person: PersonIn, service: Annotated[PersonService, Depends()]):
-    return service.create(Person ,person)
+    return service.create(Person, person)

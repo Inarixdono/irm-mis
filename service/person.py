@@ -1,4 +1,4 @@
-from .generic import Generic
+from .crud import CRUD
 
-class Person(Generic):
+class Person(CRUD):
     pass
