@@ -1,6 +1,6 @@
 from datetime import date
 from sqlmodel import SQLModel, Field
-from .types import Address, Audit
+from core.types import Address, Audit
 
 class PersonBase(SQLModel):
     name: str = Field(max_length=100)

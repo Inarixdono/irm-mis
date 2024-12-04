@@ -1,6 +1,9 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 
+class Model(SQLModel):
+    id: int = None
+
 class Address(SQLModel):
     street: str | None = Field(default=None, max_length=100)
     city: str | None = Field(default=None, max_length=100)

@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Annotated
-from .types import Address, Audit
+from core.types import Address, Audit
 
 class BranchBase(SQLModel):
     name: str
