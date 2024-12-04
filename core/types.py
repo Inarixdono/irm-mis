@@ -1,3 +1,4 @@
+from enum import Enum
 from sqlmodel import Field
 from datetime import datetime
 
@@ -21,3 +22,8 @@ class Audit:
     created_at: datetime = Field(default=datetime.now())
     updated_by: int | None = None
     updated_at: datetime | None = None
+
+
+class DocumentType(str, Enum):
+    national_id = "national_id"
+    passport = "passport"
