@@ -1,9 +1,11 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field
 from datetime import datetime
+
 
 class Model:
     id: int | None = Field(default=None, primary_key=True)
-    
+
+
 class Address:
     street: str | None = Field(default=None, max_length=100)
     city: str | None = Field(default=None, max_length=100)
@@ -11,7 +13,8 @@ class Address:
     zip_code: str | None = Field(default=None, min_length=5, max_length=5)
     country: str | None = Field(default=None, max_length=100)
     reference: str | None = Field(default=None, max_length=100)
-    
+
+
 class Audit:
     is_active: bool = True
     created_by: int | None = Field(default=None)

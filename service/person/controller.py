@@ -7,8 +7,11 @@ router = APIRouter(
     prefix="/persons",
     tags=["persons"],
     responses={404: {"description": "Not found"}},
-)   
-        
+)
+
+
 @router.post("/", response_model=PersonPublic)
-async def create_person(person: PersonCreate, service: Annotated[PersonService, Depends()]):
+async def create_person(
+    person: PersonCreate, service: Annotated[PersonService, Depends()]
+):
     return service.create(Person, person)

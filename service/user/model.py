@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 
+
 class User(SQLModel):
     id: int | None = Field(default=None, primary_key=True)
     person_id: int = Field(foreign_key="person.id")
