@@ -1,17 +1,17 @@
-from sqlmodel import SQLModel, Field, Relationship
-from typing import Annotated
-from core.types import Address, Audit
+from core.types import Address, Audit, Model, SQLModel
 
 class BranchBase(SQLModel):
     name: str
     phone_number: str
-    admin_id: int = Field(foreign_key="person.id")
 
-class BranchIn(Audit, Address, BranchBase, SQLModel):
+class BranchCreate(Address, BranchBase):
+    pass
+
+class BranchUpdate(BranchCreate, Model):
+    pass
+
+class BranchPublic(BranchBase, Model):
     pass
     
-class Branch(BranchIn, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    
-class BranchOut(BranchBase):
-    id: int
+class Branch(Audit, BranchCreate, Model, table=True):
+    pass
