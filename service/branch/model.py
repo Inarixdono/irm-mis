@@ -1,4 +1,5 @@
-from core.types import Address, Audit, Model, SQLModel
+from core.types import Address, Audit, Model
+from sqlmodel import SQLModel
 
 
 class BranchBase(SQLModel):
