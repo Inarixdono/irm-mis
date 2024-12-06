@@ -1,4 +1,5 @@
-from core.types import Address, Audit, Model, ModelUpdate, SQLModel
+from sqlmodel import Field
+from core.types import Address, Audit, ModelUpdate, SQLModel
 
 
 class BranchBase(SQLModel):
@@ -19,5 +20,5 @@ class BranchPublic(BranchBase):
     id: int
 
 
-class Branch(Audit, BranchCreate, Model, table=True):
-    pass
+class Branch(Audit, BranchCreate, table=True):
+    id: int | None = Field(default=None, primary_key=True)
