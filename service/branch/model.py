@@ -1,5 +1,4 @@
-from core.types import Address, Audit, Model
-from sqlmodel import SQLModel
+from core.types import Address, Audit, Model, ModelUpdate, SQLModel
 
 
 class BranchBase(SQLModel):
@@ -11,12 +10,13 @@ class BranchCreate(Address, BranchBase):
     pass
 
 
-class BranchUpdate(BranchCreate, Model):
-    pass
+class BranchUpdate(Address, ModelUpdate):
+    name: str | None = None
+    phone_number: str | None = None
 
 
-class BranchPublic(BranchBase, Model):
-    pass
+class BranchPublic(BranchBase):
+    id: int
 
 
 class Branch(Audit, BranchCreate, Model, table=True):
