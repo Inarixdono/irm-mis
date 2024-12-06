@@ -1,5 +1,5 @@
 from core.database import SessionDependency, SQLModel
-from core.types import Model
+from core.types import ModelUpdate
 from fastapi import HTTPException
 from sqlmodel import select
 
@@ -8,7 +8,7 @@ class CRUD:
     def __init__(self, session: SessionDependency):
         self.session = session
 
-    def read(self, base_model: Model, id: int):
+    def read(self, base_model: SQLModel, id: int):
         resource = self.session.get(base_model, id)
         if not resource:
             raise HTTPException(status_code=404, detail="Resource not found")
@@ -25,7 +25,7 @@ class CRUD:
         self.session.refresh(resource)
         return resource
 
-    def update(self, base_model: SQLModel, model_update: Model):
+    def update(self, base_model: SQLModel, model_update: ModelUpdate):
         resource = self.session.get(base_model, model_update.id)
         if not resource:
             raise HTTPException(status_code=404, detail="Resource not found")
