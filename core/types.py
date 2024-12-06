@@ -4,10 +4,6 @@ from datetime import datetime
 from sqlmodel import SQLModel
 
 
-class Model:
-    id: int | None = Field(default=None, primary_key=True)
-
-
 class ModelUpdate(SQLModel):
     id: int
 
