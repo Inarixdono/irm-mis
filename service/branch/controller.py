@@ -16,7 +16,7 @@ async def read_branches(service: Annotated[BranchService, Depends()]):
 
 
 @router.get("/{id}", response_model=BranchPublic)
-async def read_branch(id: int, service: Annotated[BranchService, Depends()]):
+async def read(id: int, service: Annotated[BranchService, Depends()]):
     return service.read(Branch, id)
 
 
