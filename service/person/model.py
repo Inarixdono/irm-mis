@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field
-from core.types import Address, Audit, Model, DocumentType
+from core.types import Address, Audit, DocumentType, ModelUpdate
 
 
 class PersonBase(SQLModel):
@@ -13,13 +13,16 @@ class PersonCreate(Address, PersonBase):
     pass
 
 
-class PersonUpdate(PersonCreate, Model):
-    pass
+class PersonUpdate(ModelUpdate):
+    name: str | None = None
+    document_type: DocumentType | None = None
+    document_number: str | None = None
+    phone_number: str | None = None
 
 
-class PersonPublic(PersonBase, Model):
-    pass
+class PersonPublic(PersonBase):
+    id: int
 
 
-class Person(Audit, PersonCreate, Model, table=True):
-    pass
+class Person(Audit, PersonCreate, table=True):
+    id: int | None = Field(default=None, primary_key=True)
