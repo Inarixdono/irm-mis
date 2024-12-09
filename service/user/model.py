@@ -1,14 +1,29 @@
-from sqlmodel import SQLModel, Field
-from datetime import datetime
+from core.types import ModelUpdate, SQLModel, Audit
+from sqlmodel import Field
 
 
-class User(SQLModel):
+class UserBase(SQLModel):
+    data: int = Field(foreign_key="person.id")
+    email: str = Field(max_length=50)
+    branch_id: int = Field(foreign_key="branch.id")
+    note: str | None = None
+
+
+class UserCreate(UserBase):
+    password: str
+
+
+class UserUpdate(ModelUpdate):
+    email: str | None = None
+    password: str | None = None
+    branch_id: int | None = None
+    note: str | None = None
+
+
+class UserPublic(UserBase):
+    id: int
+
+
+class User(Audit, UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    person_id: int = Field(foreign_key="person.id")
-    email: str = Field(max_length=255, unique=True)
-    password: str = Field(max_length=255)
-    is_active: bool = True
-    # branch
-    notes: str | None = Field(default=None)
-    created_by: int | None = Field(default=None)
-    creation_date: datetime | None = None
+    password: str
