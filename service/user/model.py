@@ -4,7 +4,7 @@ from sqlmodel import Field
 
 class UserBase(SQLModel):
     data: int = Field(foreign_key="person.id")
-    email: str = Field(max_length=50)
+    email: str = Field(max_length=50, unique=True)
     branch_id: int = Field(foreign_key="branch.id")
     note: str | None = None
 
