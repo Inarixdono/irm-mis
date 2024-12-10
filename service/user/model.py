@@ -1,10 +1,11 @@
-from .link import UserRoleLink
+from .link import UserRoleLink, UserDepartmentLink
 from core.types import ModelUpdate, SQLModel, Audit
 from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship
 
 if TYPE_CHECKING:
     from .role import Role
+    from .department import Department
 
 
 class UserBase(SQLModel):
@@ -32,4 +33,5 @@ class UserPublic(UserBase):
 class User(Audit, UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     password: str
+    department: "Department" = Relationship(back_populates="users", link_model=UserDepartmentLink)
     roles: list["Role"] = Relationship(back_populates="users", link_model=UserRoleLink)
