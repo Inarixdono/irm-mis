@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 class UserBase(SQLModel):
-    data: int = Field(foreign_key="person.id")
+    id: int = Field(foreign_key="person.id", primary_key=True)
     email: str = Field(max_length=50, unique=True)
     branch_id: int = Field(foreign_key="branch.id")
     note: str | None = None
@@ -31,7 +31,8 @@ class UserPublic(UserBase):
 
 
 class User(Audit, UserBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
     password: str
-    department: "Department" = Relationship(back_populates="users", link_model=UserDepartmentLink)
+    department: "Department" = Relationship(
+        back_populates="users", link_model=UserDepartmentLink
+    )
     roles: list["Role"] = Relationship(back_populates="users", link_model=UserRoleLink)
