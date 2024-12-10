@@ -1,8 +1,13 @@
+from .link import UserDepartmentLink
 from core.types import ModelUpdate, Audit
 from core.crud import CRUD
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 from fastapi import APIRouter, Depends
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
+
+
+if TYPE_CHECKING:
+    from .model import User
 
 router = APIRouter(
     prefix="/department",
@@ -31,6 +36,7 @@ class DepartementPublic(DepartmentBase):
 
 class Department(Audit, DepartmentBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    users: list["User"] = Relationship(back_populates="department", link_model=UserDepartmentLink)
 
 
 @router.get("/{department_id}", response_model=DepartementPublic)
