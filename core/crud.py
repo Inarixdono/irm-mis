@@ -20,17 +20,17 @@ class CRUD:
 
     def create(self, base_model: SQLModel, model_create: SQLModel):
         resource = base_model.model_validate(model_create)
-        self.session.add(resource)
-        self.session.commit()
-        self.session.refresh(resource)
-        return resource
+        return self.__commit(resource)
 
     def update(self, base_model: SQLModel, model_update: ModelUpdate):
-        resource = self.session.get(base_model, model_update.id)
+        resource: SQLModel = self.session.get(base_model, model_update.id)
         if not resource:
             raise HTTPException(status_code=404, detail="Resource not found")
         resource_data = model_update.model_dump(exclude_unset=True)
         resource.sqlmodel_update(resource_data)
+        return self.__commit(resource)
+
+    def __commit(self, resource):
         self.session.add(resource)
         self.session.commit()
         self.session.refresh(resource)
