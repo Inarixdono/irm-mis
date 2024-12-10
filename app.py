@@ -4,6 +4,7 @@ from service.person.controller import router as person_router
 from service.branch.controller import router as branch_router
 from service.user.controller import router as user_router
 from service.user.role import router as role_router
+from service.user.department import router as department_router
 
 app = FastAPI(lifespan=init_db)
 
@@ -11,6 +12,7 @@ app.include_router(person_router)
 app.include_router(branch_router)
 app.include_router(user_router)
 app.include_router(role_router)
+app.include_router(department_router)
 
 
 @app.get("/")
