@@ -1,7 +1,7 @@
 from .model import UserCreate, UserUpdate, UserPublic, User
 from .service import User as UserService
 from typing import Annotated
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 
 router = APIRouter(
     prefix="/users",
@@ -21,8 +21,13 @@ async def read_all(service: Annotated[UserService, Depends()]):
 
 
 @router.post("/", response_model=UserPublic)
-async def create(user: UserCreate, service: Annotated[UserService, Depends()]):
-    return service.create(user)
+async def create(
+    user: UserCreate,
+    service: Annotated[UserService, Depends()],
+    roles: Annotated[list[int], Body()] = None,
+    department_id: Annotated[int, Body()] = None,
+):
+    return service.create(user, roles, department_id)
 
 
 @router.put("/", response_model=UserPublic)
