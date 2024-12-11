@@ -1,11 +1,13 @@
-import os
-from passlib.context import CryptContext
+from pydantic_settings import BaseSettings
 
 
-class Config:
-    DATABASE_DEVELOPMENT = os.getenv("DATABASE_DEVELOPMENT")
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+class Settings(BaseSettings):
+    database_development: str
+    database_production: str
+    database_test: str
+    secret_key: str
+    carolina_user: str
+    carolina_password: str
 
 
-
-settings = Config()
+settings = Settings()
