@@ -1,9 +1,9 @@
 from fastapi.testclient import TestClient
-from .utils import person_example
+from .helper import person_example, create_person
 
 
 def test_create_person(client: TestClient):
-    response = client.post("/persons/", json=person_example)
+    response = create_person(client)
     assert response.status_code == 200
 
 

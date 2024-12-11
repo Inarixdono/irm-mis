@@ -1,9 +1,9 @@
-from .utils import branch_example
+from .helper import branch_example, create_branch
 from fastapi.testclient import TestClient
 
 
 def test_create_branch(client: TestClient):
-    response = client.post("/branches/", json=branch_example)
+    response = create_branch(client)
     assert response.status_code == 200
 
 
