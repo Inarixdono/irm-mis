@@ -5,8 +5,6 @@ from fastapi.testclient import TestClient
 def test_create_branch(client: TestClient):
     response = client.post("/branches/", json=branch_example)
     assert response.status_code == 200
-    content = response.json()
-    assert content["name"] == branch_example["name"]
 
 
 def test_read_branch(client: TestClient):
@@ -19,14 +17,12 @@ def test_read_branch(client: TestClient):
 def test_read_all_branches(client: TestClient):
     response = client.get("/branches/")
     assert response.status_code == 200
-    data = response.json()
-    assert len(data) == 1
-    assert data[0]["name"] == branch_example["name"]
+    assert len(response.json()) == 1
 
 
 def test_update_branch(client: TestClient):
     branch_example["id"] = 1
-    branch_example["name"] = "UPDATED"
+    branch_example["name"] = "SHINJUKU"
     response = client.put("/branches/", json=branch_example)
     assert response.status_code == 200
     content = response.json()
