@@ -4,6 +4,11 @@ services:
       context: .
     environment:
       DATABASE_DEVELOPMENT: ${DATABASE_DEVELOPMENT}
+      DATABASE_TEST: ${DATABASE_TEST}
+      DATABASE_PRODUCTION: ${DATABASE_PRODUCTION}
+      SECRET_KEY: ${SECRET_KEY}
+      CAROLINA_USER: ${CAROLINA_USER}
+      CAROLINA_PASSWORD: ${CAROLINA_PASSWORD}
     secrets:
       - db_development
     ports:
