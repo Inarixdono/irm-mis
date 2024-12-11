@@ -1,10 +1,8 @@
 from .department import Department
 from .model import UserCreate, UserUpdate, User as UserModel
 from .role import Role
-
-# from .role import Role
 from core.crud import CRUD
-from core.config import settings
+from core.security import get_password_hash
 
 
 class User(CRUD):
@@ -18,7 +16,7 @@ class User(CRUD):
         return super().create(UserModel, user)
 
     def update(self, user_update: UserUpdate):
-        user_update.password = self.__hash_password(user_update.password)
+        user_update.password = get_password_hash(user_update.password)
         return super().update(UserModel, user_update)
 
     def __get_role(self, role_id: int):
@@ -29,6 +27,3 @@ class User(CRUD):
 
     def _get_department(self, department_id: int):
         return super().read(Department, department_id) if department_id else None
-
-    def __hash_password(self, password: str):
-        return settings.pwd_context.hash(password)
