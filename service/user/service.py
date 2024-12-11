@@ -7,7 +7,7 @@ from core.security import get_password_hash
 
 class User(CRUD):
     def create(self, user_create: UserCreate, roles: list[int], department_id: int):
-        user_create.password = self.__hash_password(user_create.password)
+        user_create.password = get_password_hash(user_create.password)
         user = UserModel(
             **user_create.model_dump(),
             roles=self._get_roles(roles),
