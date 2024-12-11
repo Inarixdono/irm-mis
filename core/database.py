@@ -4,7 +4,7 @@ from core.config import settings
 from fastapi import Depends, FastAPI
 from sqlmodel import Session, create_engine, SQLModel
 
-engine = create_engine(settings.DATABASE_DEVELOPMENT)
+engine = create_engine(settings.database_development)
 
 
 @asynccontextmanager
