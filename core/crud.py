@@ -19,8 +19,8 @@ class CRUD:
         statement = select(base_model)
         return self.session.exec(statement).all()
 
-    def create(self, base_model: SQLModel, model_create: SQLModel):
-        resource = base_model.model_validate(model_create)
+    def create(self, base_model: SQLModel, model_create: SQLModel, extra_data=None):
+        resource = base_model.model_validate(model_create, update=extra_data)
         return self.__commit(resource)
 
     def update(self, base_model: SQLModel, model_update: ModelUpdate):
