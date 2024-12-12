@@ -26,11 +26,10 @@ class CRUD:
     def update(self, base_model: SQLModel, model_update: ModelUpdate):
         extra_data = {}
         resource: SQLModel = self.session.get(base_model, model_update.id)
-        if not resource:
-            raise HTTPException(status_code=404, detail="Resource not found")
 
         if issubclass(base_model, Audit):
             extra_data = {"updated_at": datetime.now()}
+
         resource_data = model_update.model_dump(exclude_unset=True)
         resource.sqlmodel_update(resource_data, update=extra_data)
         return self.__commit(resource)
