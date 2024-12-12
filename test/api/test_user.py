@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from .helper import create_user, create_role, create_department, user_example
+from ..helper import create_user, create_role, create_department, user_example
 
 
 def test_create_role(client: TestClient):

@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from .helper import person_example, create_person
+from ..helper import person_example, create_person
 
 
 def test_create_person(client: TestClient):
