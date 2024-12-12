@@ -16,12 +16,12 @@ def client() -> Generator[TestClient, None, None]:
 @pytest.fixture(scope="session", autouse=True)
 def db() -> Generator[Session, None, None]:
     with Session(engine) as session:
-        yield session
         SQLModel.metadata.drop_all(engine)
+        SQLModel.metadata.create_all(engine)
+        yield session
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def crud(db: Session) -> Generator[CRUD, None, None]:
-    SQLModel.metadata.create_all(engine)
     with db as session:
         yield CRUD(session)
