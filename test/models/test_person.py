@@ -1,12 +1,20 @@
 from ..helper import person_example
-from service.person.model import PersonCreate, Person
+from service.person.model import Person, PersonCreate, PersonUpdate
 from core.crud import CRUD
 
 
 def test_create_person(crud: CRUD):
-    person = PersonCreate(**person_example)
-    person_db: Person = crud.create(Person, person)
-    assert hasattr(person_db, "id")
-    assert person_db.name == person.name
-    assert person_db.created_at is not None
-    assert person_db.updated_at is None
+    person_create = PersonCreate(**person_example)
+    person: Person = crud.create(Person, person_create)
+    assert hasattr(person, "id")
+    assert person.name == person_create.name
+    assert person.created_at is not None
+    assert person.updated_at is None
+
+def test_update_person(crud: CRUD):
+    person_example["id"] = 1
+    person_example["name"] = "SUGURU GETO"
+    person_update = PersonUpdate(**person_example)
+    person: Person = crud.update(Person, person_update)
+    assert person.name == person_update.name
+    assert person.updated_at is not None
