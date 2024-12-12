@@ -1,5 +1,6 @@
+from core.types import Audit, ModelUpdate
 from core.database import SessionDependency, SQLModel
-from core.types import ModelUpdate
+from datetime import datetime
 from fastapi import HTTPException
 from sqlmodel import select
 
@@ -23,11 +24,15 @@ class CRUD:
         return self.__commit(resource)
 
     def update(self, base_model: SQLModel, model_update: ModelUpdate):
+        extra_data = {}
         resource: SQLModel = self.session.get(base_model, model_update.id)
         if not resource:
             raise HTTPException(status_code=404, detail="Resource not found")
+
+        if issubclass(base_model, Audit):
+            extra_data = {"updated_at": datetime.now()}
         resource_data = model_update.model_dump(exclude_unset=True)
-        resource.sqlmodel_update(resource_data)
+        resource.sqlmodel_update(resource_data, update=extra_data)
         return self.__commit(resource)
 
     def __commit(self, resource):
