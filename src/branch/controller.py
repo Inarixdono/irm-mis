@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
-from service.branch.model import BranchCreate, BranchPublic, Branch, BranchUpdate
-from service.branch.service import Branch as BranchService
+from src.branch.model import BranchCreate, BranchPublic, Branch, BranchUpdate
+from src.branch.service import Branch as BranchService
 
 router = APIRouter(
     prefix="/branches",

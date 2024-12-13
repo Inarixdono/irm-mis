@@ -1,5 +1,5 @@
 from ..helper import person_example
-from service.person.model import Person, PersonCreate, PersonUpdate
+from src.person.model import Person, PersonCreate, PersonUpdate
 from core.crud import CRUD
 
 

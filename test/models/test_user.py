@@ -1,7 +1,7 @@
 from core.crud import CRUD
-from service.user.model import User
-from service.person.model import Person
-from service.branch.model import BranchCreate, Branch
+from src.user.model import User
+from src.person.model import Person
+from src.branch.model import BranchCreate, Branch
 
 
 def test_create_branch(crud: CRUD):

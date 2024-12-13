@@ -1,5 +1,5 @@
 from core.config import settings
-from service.user.model import User
+from src.user.model import User
 from contextlib import asynccontextmanager
 from typing import Annotated
 from fastapi import FastAPI, Depends
@@ -10,10 +10,10 @@ engine = create_engine(settings.DATABASE_DEVELOPMENT)
 
 def create_first_user(session: Session):
     from core.types import DocumentType
-    from service.person.model import Person
-    from service.branch.model import Branch
-    from service.user.department import Department
-    from service.user.role import Role
+    from src.person.model import Person
+    from src.branch.model import Branch
+    from src.user.department import Department
+    from src.user.role import Role
 
     user = User(
         info=Person(

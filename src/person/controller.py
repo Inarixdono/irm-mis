@@ -1,6 +1,6 @@
 from typing import Annotated
-from service.person.model import PersonCreate, PersonUpdate, PersonPublic, Person
-from service.person.service import Person as PersonService
+from src.person.model import PersonCreate, PersonUpdate, PersonPublic, Person
+from src.person.service import Person as PersonService
 from fastapi import APIRouter, Depends
 
 router = APIRouter(
