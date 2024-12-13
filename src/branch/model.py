@@ -9,12 +9,11 @@ if TYPE_CHECKING:
 
 class BranchBase(SQLModel):
     name: str
-    phone_number: str
+    phone_number: str | None = None
 
 
 class BranchCreate(Address, BranchBase):
     pass
-
 
 class BranchUpdate(Address, ModelUpdate):
     name: str | None = None
