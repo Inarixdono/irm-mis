@@ -1,14 +1,11 @@
 from .department import Department
 from .model import UserCreate, UserUpdate, User as UserModel
 from .role import Role
-from core.crud import CRUD, SessionDependency
+from core.crud import CRUD
 from core.security import get_password_hash
 
 
 class User(CRUD):
-    def __init__(self, session: SessionDependency):
-        super().__init__(session)
-
     def create(self, user_create: UserCreate, roles: list[int], department_id: int):
         extra_data = {
             "password": get_password_hash(user_create.password),
