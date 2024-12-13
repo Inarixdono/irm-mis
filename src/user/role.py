@@ -39,7 +39,7 @@ class Role(Audit, RoleBase, table=True):
 
 
 @router.get("/{role_id}", response_model=RolePublic)
-async def read(role_id: int, service: Annotated[CRUD, Depends()]):
+async def read_role(role_id: int, service: Annotated[CRUD, Depends()]):
     return service.read(Role, role_id)
 
 @router.get("/", response_model=list[RolePublic])
@@ -47,9 +47,9 @@ async def read_all(service: Annotated[CRUD, Depends()]):
     return service.read_all(Role)
 
 @router.post("/", response_model=RolePublic)
-async def create(role: RoleCreate, service: Annotated[CRUD, Depends()]):
+async def create_role(role: RoleCreate, service: Annotated[CRUD, Depends()]):
     return service.create(Role, role)
 
 @router.put("/", response_model=RolePublic)
-async def update(role: RoleUpdate, service: Annotated[CRUD, Depends()]):
+async def update_role(role: RoleUpdate, service: Annotated[CRUD, Depends()]):
     return service.update(Role, role)

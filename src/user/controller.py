@@ -12,7 +12,7 @@ router = APIRouter(
 
 
 @router.get("/{user_id}", response_model=UserPublic)
-async def read(user_id: int, service: Annotated[UserService, Depends()]):
+async def read_user(user_id: int, service: Annotated[UserService, Depends()]):
     return service.read(User, user_id)
 
 
@@ -22,7 +22,7 @@ async def read_all(service: Annotated[UserService, Depends()]):
 
 
 @router.post("/", response_model=UserPublic)
-async def create(
+async def create_user(
     info: PersonCreate,
     user: UserCreate,
     service: Annotated[UserService, Depends()],
@@ -33,5 +33,5 @@ async def create(
 
 
 @router.put("/", response_model=UserPublic)
-async def update(user: UserUpdate, service: Annotated[UserService, Depends()]):
+async def update_user(user: UserUpdate, service: Annotated[UserService, Depends()]):
     return service.update(user)

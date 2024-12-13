@@ -10,8 +10,8 @@ if TYPE_CHECKING:
     from .model import User
 
 router = APIRouter(
-    prefix="/department",
-    tags=["department"],
+    prefix="/departments",
+    tags=["departments"],
     responses={404: {"description": "Not found"}},
 )
 
@@ -40,7 +40,7 @@ class Department(Audit, DepartmentBase, table=True):
 
 
 @router.get("/{department_id}", response_model=DepartementPublic)
-async def read(department_id: int, service: Annotated[CRUD, Depends()]):
+async def read_department(department_id: int, service: Annotated[CRUD, Depends()]):
     return service.read(Department, department_id)
 
 
@@ -50,10 +50,10 @@ async def read_all(service: Annotated[CRUD, Depends()]):
 
 
 @router.post("/", response_model=DepartementPublic)
-async def create(department: DepartmentCreate, service: Annotated[CRUD, Depends()]):
+async def create_department(department: DepartmentCreate, service: Annotated[CRUD, Depends()]):
     return service.create(Department, department)
 
 
 @router.put("/", response_model=DepartementPublic)
-async def update(department: DepartmentUpdate, service: Annotated[CRUD, Depends()]):
+async def update_department(department: DepartmentUpdate, service: Annotated[CRUD, Depends()]):
     return service.update(Department, department)
