@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class UserBase(SQLModel):
-    id: int
+    id: int | None = Field(default=None, foreign_key="person.id", primary_key=True)
     email: str = Field(max_length=50, unique=True)
     branch_id: int | None = Field(default=None, foreign_key="branch.id")
     note: str | None = None
@@ -20,6 +20,7 @@ class UserBase(SQLModel):
 
 class UserCreate(UserBase):
     password: str
+    branch_id: int
 
 
 class UserUpdate(ModelUpdate):
@@ -30,11 +31,10 @@ class UserUpdate(ModelUpdate):
 
 
 class UserPublic(UserBase):
-    pass
+    id: int
 
 
 class User(Audit, UserBase, table=True):
-    id: int | None = Field(default=None, foreign_key="person.id", primary_key=True)
     password: str
     info: "Person" = Relationship(back_populates="user")
     branch: "Branch" = Relationship(back_populates="users")
