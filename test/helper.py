@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
 branch_example = {
-    "name": "SHINJUKU",
+    "name": "TOKYO",
     "phone_number": "0000000000",
 }
 
@@ -11,7 +11,6 @@ person_example = {
 }
 
 user_example = {
-    "id": 1,
     "email": "gojosatoru@infinitevoid.com",
     "branch_id": 1,
     "password": "hollowtechniquepurple",
@@ -26,18 +25,10 @@ def create_person(client: TestClient):
     return client.post("/persons/", json=person_example)
 
 
-def create_role(client: TestClient):
-    return client.post("/roles/", json={"name": "ADMIN"})
-
-
-def create_department(client: TestClient):
-    return client.post("/department/", json={"name": "IT"})
-
-
 def create_user(client: TestClient):
     data = {
+        "info": person_example,
         "user": user_example,
         "roles": [1],
-        "department": 1,
     }
     return client.post("/users/", json=data)
