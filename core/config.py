@@ -8,11 +8,12 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     CAROLINA_USER: str
     CAROLINA_PASSWORD: str
+
     SUPERUSER_EMAIL: str
     SUPERUSER_PASSWORD: str
     SUPERUSER_NAME: str
     SUPERUSER_DOCUMENT_NUMBER: str
-    
+    SUPERUSER_BRANCH: str
 
 
 settings = Settings()
