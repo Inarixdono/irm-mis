@@ -19,7 +19,6 @@ def test_create_user(crud: CRUD):
     user = User(
         info=Person(
             name="ITADORI YUJI",
-            document_type="national_id",
             document_number="1234567890",
         ),
         email="yujiitadori@bestblackflasherever.com",
