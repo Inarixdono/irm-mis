@@ -1,4 +1,4 @@
-from core.types import Address, Audit, DocumentType, ModelUpdate
+from core.types import Address, Audit, Document, ModelUpdate
 from typing import TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 
@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class PersonBase(SQLModel):
     name: str = Field(max_length=100)
-    document_type: DocumentType
+    document_type: Document = "national_id"
     document_number: str = Field(max_length=20, unique=True)
     phone_number: str | None = Field(default=None, max_length=10)
 
@@ -19,7 +19,7 @@ class PersonCreate(Address, PersonBase):
 
 class PersonUpdate(ModelUpdate):
     name: str | None = None
-    document_type: DocumentType | None = None
+    document_type: Document | None = None
     document_number: str | None = None
     phone_number: str | None = None
 
