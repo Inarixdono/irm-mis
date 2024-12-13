@@ -9,7 +9,7 @@ engine = create_engine(settings.DATABASE_DEVELOPMENT)
 
 
 def create_first_user(session: Session):
-    from core.types import DocumentType
+    from core.types import Role as RoleEnum, Department as DepartmentEnum
     from src.person.model import Person
     from src.branch.model import Branch
     from src.user.department import Department
@@ -18,14 +18,13 @@ def create_first_user(session: Session):
     user = User(
         info=Person(
             name=settings.SUPERUSER_NAME,
-            document_type=DocumentType.national_id,
             document_number=settings.SUPERUSER_DOCUMENT_NUMBER,
         ),
         email=settings.SUPERUSER_EMAIL,
         password=settings.SUPERUSER_PASSWORD,
-        branch=Branch(name="Puerto Plata", phone_number="809-586-0100"),
-        department=Department(name="Development"),
-        roles=[Role(name="Superuser")],
+        branch=Branch(name=settings.SUPERUSER_BRANCH),
+        department=Department(name=DepartmentEnum.DEVELOPMENT),
+        roles=[Role(name=RoleEnum.SUPERUSER)],
     )
 
     session.add(user)
