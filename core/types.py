@@ -1,7 +1,6 @@
 from enum import Enum
-from sqlmodel import Field
 from datetime import datetime
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
 
 
 class ModelUpdate(SQLModel):
@@ -25,6 +24,23 @@ class Audit:
     updated_at: datetime | None = None
 
 
-class DocumentType(str, Enum):
-    national_id = "national_id"
-    passport = "passport"
+class Document(str, Enum):
+    NATIONAL_ID = "national_id"
+    PASSPORT = "passport"
+
+
+class Role(str, Enum):
+    SUPERUSER = "Superuser"
+    ADMIN = "Admin"
+    CLIENT = "Client"
+    EMPLOYEE = "Employee"
+
+
+class Department(str, Enum):
+    DEVELOPMENT = "Development"
+    ADMINISTRATION = "Administration"
+    ACCOUNTING = "Accounting"
+    SALES = "Sales"
+    CXC = "CXC"
+    BILLING = "Billing"
+    COSTUMER_SERVICE = "Costumer Service"
