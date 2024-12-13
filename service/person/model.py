@@ -1,5 +1,9 @@
-from sqlmodel import SQLModel, Field
 from core.types import Address, Audit, DocumentType, ModelUpdate
+from typing import TYPE_CHECKING
+from sqlmodel import SQLModel, Field, Relationship
+
+if TYPE_CHECKING:
+    from ..user.model import User
 
 
 class PersonBase(SQLModel):
@@ -26,3 +30,4 @@ class PersonPublic(PersonBase):
 
 class Person(Audit, PersonCreate, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    user: "User" = Relationship(back_populates="info")

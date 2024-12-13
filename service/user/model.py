@@ -6,10 +6,11 @@ from sqlmodel import Field, Relationship
 if TYPE_CHECKING:
     from .role import Role
     from .department import Department
+    from ..person.model import Person
 
 
 class UserBase(SQLModel):
-    id: int = Field(foreign_key="person.id", primary_key=True)
+    id: int
     email: str = Field(max_length=50, unique=True)
     branch_id: int = Field(foreign_key="branch.id")
     note: str | None = None
@@ -27,11 +28,13 @@ class UserUpdate(ModelUpdate):
 
 
 class UserPublic(UserBase):
-    id: int
+    pass
 
 
 class User(Audit, UserBase, table=True):
+    id: int | None = Field(default=None, foreign_key="person.id", primary_key=True)
     password: str
+    info: "Person" = Relationship(back_populates="user")
     department: "Department" = Relationship(
         back_populates="users", link_model=UserDepartmentLink
     )
