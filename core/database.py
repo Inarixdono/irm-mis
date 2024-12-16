@@ -5,15 +5,19 @@ from typing import Annotated
 from fastapi import FastAPI, Depends
 from sqlmodel import SQLModel, Session, create_engine, select
 
-engine = create_engine(settings.DATABASE_DEVELOPMENT)
+connect_args = {"check_same_thread": False}
+engine = create_engine(settings.DATABASE_DEVELOPMENT, connect_args=connect_args)
 
 
 def create_first_user(session: Session):
     from core.types import Role as RoleEnum, Department as DepartmentEnum
+    from core.security import get_password_hash
     from src.person.model import Person
     from src.branch.model import Branch
     from src.user.department import Department
     from src.user.role import Role
+
+    password_hash = get_password_hash(settings.SUPERUSER_PASSWORD)
 
     user = User(
         info=Person(
@@ -21,7 +25,7 @@ def create_first_user(session: Session):
             document_number=settings.SUPERUSER_DOCUMENT_NUMBER,
         ),
         email=settings.SUPERUSER_EMAIL,
-        password=settings.SUPERUSER_PASSWORD,
+        password=password_hash,
         branch=Branch(name=settings.SUPERUSER_BRANCH),
         department=Department(name=DepartmentEnum.DEVELOPMENT),
         roles=[Role(name=RoleEnum.SUPERUSER)],
