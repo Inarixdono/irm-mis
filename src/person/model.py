@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 class PersonBase(SQLModel):
-    name: str = Field(max_length=100)
+    name: str = Field(index=True, max_length=100)
     document_type: Document = "national_id"
     document_number: str = Field(max_length=20, unique=True)
     phone_number: str | None = Field(default=None, max_length=10)
