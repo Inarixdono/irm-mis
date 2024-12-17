@@ -1,13 +1,17 @@
-from datetime import datetime, timedelta, timezone
-
 import jwt
+from datetime import datetime, timedelta, timezone
 from core.config import settings
+from core.exceptions import InvalidCredentialsException
+from src.auth.model import TokenData
 from src.user.model import User
-from fastapi.security import OAuth2PasswordBearer
+from typing import Annotated
 from passlib.context import CryptContext
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
 def verify_password(plain_password: str, hashed_password: str):
@@ -34,4 +38,22 @@ def create_access_token(user: User, expires: timedelta | None = None):
         },
         key=settings.SECRET_KEY,
         algorithm=settings.ALGORITHM,
+    )
+
+
+async def get_current_user(
+    token: Annotated[str, Depends(oauth2_scheme)],
+):
+    try:
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
+    except jwt.InvalidTokenError:
+        raise InvalidCredentialsException()
+    return TokenData(
+        id=payload.get("id"),
+        name=payload.get("name"),
+        email=payload.get("email"),
+        roles=payload.get("roles"),
+        department=payload.get("department"),
     )
