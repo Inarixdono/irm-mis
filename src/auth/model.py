@@ -10,6 +10,8 @@ class TokenData(SQLModel):
     id: int = None
     name: str = None
     email: str = None
+    roles: list[str] = []
+    department: str = None
 
 
 class Login(SQLModel):
