@@ -28,7 +28,9 @@ class User(CRUD):
         return super().update(UserModel, user_update)
 
     def _get_person(self, person_create: PersonCreate) -> Person:
-        return Person.model_validate(person_create)
+        return Person.model_validate(
+            person_create, update={"created_by": self.current_user.id}
+        )
 
     def __get_role(self, role_id: int) -> Role:
         return super().read(Role, role_id)
