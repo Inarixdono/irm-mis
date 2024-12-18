@@ -1,13 +1,15 @@
-from fastapi import FastAPI
 from core.database import init_db
+from core.error_handler import integrity_error_handler
+from src.auth.controller import router as auth_router
 from api import api_router
-
+from fastapi import FastAPI
 from sqlalchemy.exc import IntegrityError
 
-from core.error_handler import integrity_error_handler
+
 
 app = FastAPI(lifespan=init_db)
 
+app.include_router(auth_router)
 app.include_router(api_router)
 
 app.add_exception_handler(IntegrityError, integrity_error_handler)
