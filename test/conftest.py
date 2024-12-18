@@ -1,7 +1,10 @@
 import pytest
 from app import app
-from core.database import engine, create_first_user
+from core.config import settings
 from core.crud import CRUD
+from core.security import get_current_user
+from src.auth.model import Token, TokenData
+from core.database import engine, create_first_user
 from collections.abc import Generator
 from fastapi.testclient import TestClient
 from sqlmodel import SQLModel, Session
@@ -20,13 +23,35 @@ def reset_database(session: Session) -> None:
     create_first_user(session)
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def crud(session: Session) -> Generator[CRUD, None, None]:
     with session as session:
         yield CRUD(session)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def client() -> Generator[TestClient, None, None]:
     with TestClient(app) as c:
         yield c
+
+
+@pytest.fixture(scope="session", autouse=True)
+def token(client: TestClient) -> Token:
+    jwt = client.post(
+        "/login",
+        data={
+            "username": settings.SUPERUSER_EMAIL,
+            "password": settings.SUPERUSER_PASSWORD,
+        },
+    )
+    return Token(**jwt.json())
+
+
+@pytest.fixture(scope="function")
+def get_user(token: Token) -> TokenData:
+    return get_current_user(token.access_token)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def headers(token: Token) -> dict:
+    return {"Authorization": f"Bearer {token.access_token}"}
