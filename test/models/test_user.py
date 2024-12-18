@@ -1,31 +1,69 @@
+from core.config import settings
 from core.crud import CRUD
-from src.user.model import User
+from core.security import get_password_hash
+from core.types import Role as RoleEnum, Department as DepartmentEnum
 from src.person.model import Person
-from src.branch.model import BranchCreate, Branch
+from src.branch.model import Branch
+from src.user.model import User, UserCreate, UserUpdate
+from src.user.department import Department
+from src.user.role import Role
+
+from ..helper import person_example, user_example
 
 
-def test_create_branch(crud: CRUD):
-    branch_create = BranchCreate(
-        name="Tokyo",
-        phone_number="1234567890",
-    )
-    branch: Branch = crud.create(Branch, branch_create)
+def test_first_branch(crud: CRUD):
+    branch: Branch = crud.read(Branch, 1)
+    assert branch.name == settings.SUPERUSER_BRANCH
 
-    assert hasattr(branch, "id")
-    assert branch.name == branch_create.name
+
+def test_first_role(crud: CRUD):
+    role: Role = crud.read(Role, 1)
+    assert role.name == RoleEnum.SUPERUSER
+
+
+def test_first_department(crud: CRUD):
+    department: Department = crud.read(Department, 1)
+    assert department.name == DepartmentEnum.DEVELOPMENT
 
 
 def test_create_user(crud: CRUD):
-    user = User(
-        info=Person(
-            name="ITADORI YUJI",
-            document_number="1234567890",
-        ),
-        email="yujiitadori@bestblackflasherever.com",
-        branch_id=1,
-        password="sukunascounter",
+    plain_password = user_example["password"]
+    user_example["password"] = get_password_hash(user_example["password"])
+    user: User = crud.create(
+        User,
+        UserCreate(**user_example),
+        extra_data={"info": Person(**person_example)},
     )
-    user: User = crud.create(User, user)
 
     assert hasattr(user, "id")
-    assert user.info.name == "ITADORI YUJI"
+    assert user.info.name == person_example["name"]
+    assert user.info.document_number == person_example["document_number"]
+    assert user.email == user_example["email"]
+    assert plain_password != user.password
+    assert user.branch_id == user_example["branch_id"]
+    assert user.is_active
+    assert user.created_at is not None
+    assert user.updated_at is None
+
+
+def test_update_user(crud: CRUD):
+    user_to_update: User = crud.read(User, 2)
+    user_before = user_to_update.model_copy()
+    user_to_update.info.name = "SUGURU GETO"
+    user_to_update.email = "getosuguru@spiritmanipulation.com"
+    user_to_update.password = get_password_hash("jureisoujutsuuzumaki")
+    updated_user: User = crud.update(
+        User,
+        UserUpdate(
+            id=user_to_update.id,
+            email=user_to_update.email,
+            password=user_to_update.password,
+        ),
+        extra_data={"info": user_to_update.info},
+    )
+
+    assert updated_user.id == user_before.id
+    assert updated_user.email != user_before.email
+    assert updated_user.password != user_before.password
+    assert updated_user.created_at == user_before.created_at
+    assert updated_user.updated_at is not None
