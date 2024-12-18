@@ -23,12 +23,6 @@ def reset_database(session: Session) -> None:
     create_first_user(session)
 
 
-@pytest.fixture(scope="session", autouse=True)
-def crud(session: Session) -> Generator[CRUD, None, None]:
-    with session as session:
-        yield CRUD(session)
-
-
 @pytest.fixture(scope="session")
 def client() -> Generator[TestClient, None, None]:
     with TestClient(app) as c:
@@ -47,9 +41,15 @@ def token(client: TestClient) -> Token:
     return Token(**jwt.json())
 
 
-@pytest.fixture(scope="function")
-def get_user(token: Token) -> TokenData:
+@pytest.fixture(scope="session")
+def current_user(token: Token) -> TokenData:
     return get_current_user(token.access_token)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def crud(session: Session, current_user: TokenData) -> Generator[CRUD, None, None]:
+    with session as session:
+        yield CRUD(session, current_user)
 
 
 @pytest.fixture(scope="session", autouse=True)
