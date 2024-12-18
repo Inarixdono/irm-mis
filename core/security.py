@@ -41,9 +41,9 @@ def create_access_token(user: User, expires: timedelta | None = None):
     )
 
 
-async def get_current_user(
+def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
-):
+) -> TokenData:
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
