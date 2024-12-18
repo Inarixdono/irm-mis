@@ -1,20 +1,19 @@
 from datetime import timedelta
 from .model import Token
 from core.config import settings
+from core.database import SessionDependency
 from core.exceptions import InvalidUserException
-from core.security import create_access_token
+from core.security import create_access_token, verify_password
 from src.user.model import User
-from src.user.service import User as UserService
-from typing import Annotated
-from fastapi import Depends
+from sqlmodel import select
 
 
 class Auth:
-    def __init__(self, service: Annotated[UserService, Depends()]):
-        self.service = service
+    def __init__(self, session: SessionDependency):
+        self.session = session
 
     def authenticate_user(self, email: str, password: str) -> bool:
-        user: User | None = self.service.authenticate_user(email, password)
+        user: User | None = self.__validate_user(email, password)
 
         if not user:
             raise InvalidUserException()
@@ -25,3 +24,14 @@ class Auth:
         )
 
         return Token(access_token=token, token_type="bearer")
+
+    def __validate_user(self, email: str, password: str) -> bool:
+        user = self.__get_user(email)
+        if not user:
+            return False
+        if not verify_password(password, user.password):
+            raise InvalidUserException()
+        return user
+
+    def __get_user(self, email: str) -> User:
+        return self.session.exec(select(User).where(User.email == email)).first()

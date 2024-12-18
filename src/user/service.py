@@ -1,11 +1,10 @@
 from .department import Department
 from .model import UserCreate, UserUpdate, User as UserModel
 from .role import Role
+
 from core.crud import CRUD
-from core.exceptions import InvalidUserException
-from core.security import get_password_hash, verify_password
+from core.security import get_password_hash
 from src.person.model import Person, PersonCreate
-from sqlmodel import select
 
 
 class User(CRUD):
@@ -27,19 +26,6 @@ class User(CRUD):
     def update(self, user_update: UserUpdate):
         user_update.password = get_password_hash(user_update.password)
         return super().update(UserModel, user_update)
-
-    def __get_user(self, email: str) -> UserModel:
-        return self.session.exec(
-            select(UserModel).where(UserModel.email == email)
-        ).first()
-
-    def authenticate_user(self, email: str, password: str) -> bool:
-        user = self.__get_user(email)
-        if not user:
-            return False
-        if not verify_password(password, user.password):
-            raise InvalidUserException()
-        return user
 
     def _get_person(self, person_create: PersonCreate) -> Person:
         return Person.model_validate(person_create)
