@@ -1,13 +1,21 @@
+from core.security import get_current_user
 from core.types import Audit, ModelUpdate
 from core.database import SessionDependency, SQLModel
+from src.auth.model import TokenData
+from typing import Annotated
 from datetime import datetime
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from sqlmodel import select
 
 
 class CRUD:
-    def __init__(self, session: SessionDependency):
+    def __init__(
+        self,
+        session: SessionDependency,
+        current_user: Annotated[TokenData, Depends(get_current_user)],
+    ):
         self.session = session
+        self.current_user = current_user
 
     def read(self, base_model: SQLModel, id: int):
         resource = self.session.get(base_model, id)
@@ -19,8 +27,13 @@ class CRUD:
         statement = select(base_model)
         return self.session.exec(statement).all()
 
-    def create(self, base_model: SQLModel, model_create: SQLModel, extra_data=None):
-        print(model_create)
+    def create(
+        self, base_model: SQLModel, model_create: SQLModel, extra_data: dict = {}
+    ):
+        if issubclass(base_model, Audit):
+            extra_data.update(
+                {"created_by": self.current_user.id}
+            )
         resource = base_model.model_validate(model_create, update=extra_data)
         return self.__commit(resource)
 
