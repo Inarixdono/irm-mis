@@ -7,7 +7,7 @@ branch_example = {
 
 person_example = {
     "name": "SATORU GOJO",
-    "document_number": "40255632169",
+    "identity_number": "40255632169",
 }
 
 user_example = {

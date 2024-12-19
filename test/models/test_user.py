@@ -37,7 +37,7 @@ def test_create_user(crud: CRUD):
 
     assert hasattr(user, "id")
     assert user.info.name == person_example["name"]
-    assert user.info.document_number == person_example["document_number"]
+    assert user.info.identity_number == person_example["identity_number"]
     assert user.email == user_example["email"]
     assert plain_password != user.password
     assert user.branch_id == user_example["branch_id"]

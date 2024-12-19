@@ -29,8 +29,9 @@ def test_read_all_users(client: TestClient, headers: dict):
 
 def test_update_user(client: TestClient, headers: dict):
     user_before = user_example.copy()
-    user_example["id"] = 2
-    user_example["email"] = "getosuguru@spiritmanipulation.com"
-    response = client.put("/users/", json=user_example, headers=headers)
+    user_to_update = user_example.copy()
+    user_to_update["id"] = 2
+    user_to_update["email"] = "getosuguru@spiritmanipulation.com"
+    response = client.put("/users/", json=user_to_update, headers=headers)
     assert response.status_code == 200
     assert response.json()["email"] != user_before["email"]

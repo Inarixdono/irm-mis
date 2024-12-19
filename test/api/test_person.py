@@ -23,8 +23,9 @@ def test_read_all_persons(client: TestClient, headers: dict):
 
 def test_update_person(client: TestClient, headers: dict):
     person_before = person_example.copy()
-    person_example["id"] = 2
-    person_example["name"] = "SUGURU GETO"
-    response = client.put("/persons/", json=person_example, headers=headers)
+    person_to_update = person_example.copy()
+    person_to_update["id"] = 2
+    person_to_update["name"] = "SUGURU GETO"
+    response = client.put("/persons/", json=person_to_update, headers=headers)
     assert response.status_code == 200
     assert response.json()["name"] != person_before["name"]

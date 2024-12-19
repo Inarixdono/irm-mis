@@ -24,8 +24,9 @@ def test_create_branch(client: TestClient, headers: dict):
 
 def test_update_branch(client: TestClient, headers: dict):
     branch_before = branch_example.copy()
-    branch_example["id"] = 2
-    branch_example["name"] = "SHINJUKU"
-    response = client.put("/branches/", json=branch_example, headers=headers)
+    branch_to_update = branch_example.copy()
+    branch_to_update["id"] = 2
+    branch_to_update["name"] = "SHINJUKU"
+    response = client.put("/branches/", json=branch_to_update, headers=headers)
     assert response.status_code == 200
     assert response.json()["name"] != branch_before["name"]
