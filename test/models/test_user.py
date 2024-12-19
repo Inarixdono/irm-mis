@@ -50,14 +50,12 @@ def test_update_user(crud: CRUD):
     user_to_update: User = crud.read(User, 2)
     user_before = user_to_update.model_copy()
     user_to_update.info.name = "SUGURU GETO"
-    user_to_update.email = "getosuguru@spiritmanipulation.com"
-    user_to_update.password = get_password_hash("jureisoujutsuuzumaki")
     updated_user: User = crud.update(
         User,
         UserUpdate(
-            id=user_to_update.id,
-            email=user_to_update.email,
-            password=user_to_update.password,
+            id=2,
+            email="getosuguru@spiritmanipulation.com",
+            password=get_password_hash("jureisoujutsuuzumaki"),
         ),
         extra_data={"info": user_to_update.info},
     )
