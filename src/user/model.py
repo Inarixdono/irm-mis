@@ -25,7 +25,7 @@ class UserCreate(UserBase):
     branch_id: int = Field(gt=0)
 
 
-class UserUpdate(UserBase, ModelUpdate):
+class UserUpdate(ModelUpdate, UserBase):
     email: str | None = Field(default=None, min_length=8, max_length=64)
     password: str | None = Field(default=None, min_length=8, max_length=64)
 
