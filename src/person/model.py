@@ -26,7 +26,7 @@ class PersonUpdate(Address, PersonBase, ModelUpdate):
     identity_number: str | None = Field(default=None, min_length=8, max_length=14)
 
 
-class PersonPublic(PersonBase):
+class PersonPublic(Audit, PersonBase):
     id: int
 
 
