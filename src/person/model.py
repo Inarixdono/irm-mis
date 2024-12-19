@@ -1,5 +1,6 @@
-from core.types import Address, Audit, Document, ModelUpdate
+from core.types import Address, Audit, IdentityType, ModelUpdate
 from typing import TYPE_CHECKING
+from sqlalchemy import CHAR
 from sqlmodel import SQLModel, Field, Relationship
 
 if TYPE_CHECKING:
@@ -7,21 +8,22 @@ if TYPE_CHECKING:
 
 
 class PersonBase(SQLModel):
-    name: str = Field(index=True, max_length=100)
-    document_type: Document = "national_id"
-    document_number: str = Field(max_length=20, unique=True)
-    phone_number: str | None = Field(default=None, max_length=10)
+    name: str = Field(min_length=5, max_length=128, index=True)
+    identity_type: IdentityType = "national_id"
+    identity_number: str = Field(min_length=8, max_length=14, unique=True)
+    phone_number: str | None = Field(
+        default=None, min_length=10, max_length=10, sa_type=CHAR(10)
+    )
 
 
 class PersonCreate(Address, PersonBase):
     pass
 
 
-class PersonUpdate(ModelUpdate):
-    name: str | None = None
-    document_type: Document | None = None
-    document_number: str | None = None
-    phone_number: str | None = None
+class PersonUpdate(Address, PersonBase, ModelUpdate):
+    name: str | None = Field(default=None, min_length=5, max_length=128)
+    identity_type: IdentityType | None = None
+    identity_number: str | None = Field(default=None, min_length=8, max_length=14)
 
 
 class PersonPublic(PersonBase):

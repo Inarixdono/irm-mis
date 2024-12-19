@@ -22,7 +22,7 @@ def create_first_user(session: Session):
     user = User(
         info=Person(
             name=settings.SUPERUSER_NAME,
-            document_number=settings.SUPERUSER_DOCUMENT_NUMBER,
+            identity_number=settings.SUPERUSER_DOCUMENT_NUMBER,
         ),
         email=settings.SUPERUSER_EMAIL,
         password=password_hash,
