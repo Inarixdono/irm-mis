@@ -12,25 +12,25 @@ if TYPE_CHECKING:
 
 
 class UserBase(SQLModel):
-    id: int | None = Field(default=None, foreign_key="person.id", primary_key=True)
-    email: str = Field(max_length=50, unique=True)
-    branch_id: int | None = Field(default=None, foreign_key="branch.id")
-    note: str | None = None
+    id: int | None = Field(
+        default=None, gt=0, primary_key=True, foreign_key="person.id"
+    )
+    email: str = Field(min_length=8, max_length=64, unique=True)
+    branch_id: int | None = Field(default=None, gt=0, foreign_key="branch.id")
+    note: str | None = Field(default=None, min_length=8, max_length=255)
 
 
 class UserCreate(UserBase):
-    password: str
-    branch_id: int
+    password: str = Field(min_length=8, max_length=64)
+    branch_id: int = Field(gt=0)
 
 
-class UserUpdate(ModelUpdate):
-    email: str | None = None
-    password: str | None = None
-    branch_id: int | None = None
-    note: str | None = None
+class UserUpdate(UserBase, ModelUpdate):
+    email: str | None = Field(default=None, min_length=8, max_length=64)
+    password: str | None = Field(default=None, min_length=8, max_length=64)
 
 
-class UserPublic(UserBase):
+class UserPublic(Audit, UserBase):
     id: int
 
 
