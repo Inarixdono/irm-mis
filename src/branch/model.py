@@ -1,5 +1,6 @@
 from core.types import Address, Audit, ModelUpdate, SQLModel
 from typing import TYPE_CHECKING
+from sqlalchemy import CHAR
 from sqlmodel import Field, Relationship
 
 
@@ -8,19 +9,21 @@ if TYPE_CHECKING:
 
 
 class BranchBase(SQLModel):
-    name: str
-    phone_number: str | None = None
+    name: str = Field(max_length=128, unique=True)
+    phone_number: str | None = Field(
+        default=None, unique=True, min_length=10, max_length=10, sa_type=CHAR(10)
+    )
 
 
 class BranchCreate(Address, BranchBase):
     pass
 
-class BranchUpdate(Address, ModelUpdate):
-    name: str | None = None
-    phone_number: str | None = None
+
+class BranchUpdate(BranchBase, ModelUpdate):
+    name: str | None = Field(default=None, max_length=128, unique=True)
 
 
-class BranchPublic(BranchBase):
+class BranchPublic(Audit, BranchCreate):
     id: int
 
 
