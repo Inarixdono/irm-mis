@@ -17,19 +17,19 @@ class CRUD:
         self.session = session
         self.current_user = current_user
 
-    def read(self, base_model: SQLModel, id: int):
+    def read(self, base_model: SQLModel, id: int) -> SQLModel:
         resource = self.session.get(base_model, id)
         if not resource:
             raise HTTPException(status_code=404, detail="Resource not found")
         return resource
 
-    def read_all(self, base_model: SQLModel):
+    def read_all(self, base_model: SQLModel) -> list[SQLModel]:
         statement = select(base_model)
         return self.session.exec(statement).all()
 
     def create(
         self, base_model: SQLModel, model_create: SQLModel, extra_data: dict = {}
-    ):
+    ) -> SQLModel:
         if issubclass(base_model, Audit):
             extra_data.update(
                 {"created_by": self.current_user.id}
@@ -39,7 +39,7 @@ class CRUD:
 
     def update(
         self, base_model: SQLModel, model_update: ModelUpdate, update_data: dict = {}
-    ):
+    ) -> SQLModel:
         resource: SQLModel = self.session.get(base_model, model_update.id)
 
         if issubclass(base_model, Audit):
@@ -49,7 +49,7 @@ class CRUD:
         resource.sqlmodel_update(resource_data, update=update_data)
         return self.__commit(resource)
 
-    def __commit(self, resource):
+    def __commit(self, resource) -> SQLModel:
         self.session.add(resource)
         self.session.commit()
         self.session.refresh(resource)
