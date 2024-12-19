@@ -57,7 +57,7 @@ def test_update_user(crud: CRUD):
             email="getosuguru@spiritmanipulation.com",
             password=get_password_hash("jureisoujutsuuzumaki"),
         ),
-        extra_data={"info": user_to_update.info},
+        update_data={"info": user_to_update.info},
     )
 
     assert updated_user.id == user_before.id

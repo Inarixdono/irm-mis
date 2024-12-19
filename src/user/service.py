@@ -27,7 +27,10 @@ class User(CRUD):
         user_update.password = get_password_hash(user_update.password)
         return super().update(UserModel, user_update)
 
-    def _create_person(self, person_create: PersonCreate) -> Person:
+    def __get_person(self, person_id: int) -> Person:
+        return super().read(Person, person_id)
+
+    def __create_person(self, person_create: PersonCreate) -> Person:
         return Person.model_validate(
             person_create, update={"created_by": self.current_user.id}
         )

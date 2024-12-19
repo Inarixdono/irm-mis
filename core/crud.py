@@ -38,15 +38,15 @@ class CRUD:
         return self.__commit(resource)
 
     def update(
-        self, base_model: SQLModel, model_update: ModelUpdate, extra_data: dict = {}
+        self, base_model: SQLModel, model_update: ModelUpdate, update_data: dict = {}
     ):
         resource: SQLModel = self.session.get(base_model, model_update.id)
 
         if issubclass(base_model, Audit):
-            extra_data.update({"updated_at": datetime.now()})
+            update_data.update({"updated_at": datetime.now()})
 
         resource_data = model_update.model_dump(exclude_unset=True)
-        resource.sqlmodel_update(resource_data, update=extra_data)
+        resource.sqlmodel_update(resource_data, update=update_data)
         return self.__commit(resource)
 
     def __commit(self, resource):
