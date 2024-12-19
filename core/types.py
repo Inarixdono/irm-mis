@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, Field
 
 
 class ModelUpdate(SQLModel):
-    id: int
+    id: int = Field(gt=0)
 
 
 class Address:
