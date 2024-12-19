@@ -31,9 +31,7 @@ class CRUD:
         self, base_model: SQLModel, model_create: SQLModel, extra_data: dict = {}
     ) -> SQLModel:
         if issubclass(base_model, Audit):
-            extra_data.update(
-                {"created_by": self.current_user.id}
-            )
+            extra_data.update({"created_by": self.current_user.id})
         resource = base_model.model_validate(model_create, update=extra_data)
         return self.__commit(resource)
 
@@ -43,7 +41,9 @@ class CRUD:
         resource: SQLModel = self.session.get(base_model, model_update.id)
 
         if issubclass(base_model, Audit):
-            update_data.update({"updated_at": datetime.now()})
+            update_data.update(
+                {"updated_by": self.current_user.id, "updated_at": datetime.now()}
+            )
 
         resource_data = model_update.model_dump(exclude_unset=True)
         resource.sqlmodel_update(resource_data, update=update_data)
