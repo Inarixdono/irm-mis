@@ -1,6 +1,6 @@
 from .model import UserCreate, UserUpdate, UserPublic, User
 from .service import User as UserService
-from src.person.model import PersonCreate
+from src.person.model import PersonCreate, PersonUpdate
 from typing import Annotated
 from fastapi import APIRouter, Depends, Body
 from sqlmodel import SQLModel
@@ -17,6 +17,11 @@ class CreateUserBody(SQLModel):
     user: UserCreate
     roles: list[Annotated[int, Body(gt=0)]]
     department_id: Annotated[int, Body(gt=0)] = None
+
+
+class UpdateUserBody(SQLModel):
+    user: UserUpdate
+    info: PersonUpdate | None = None
 
 
 @router.get("/{user_id}", response_model=UserPublic)
@@ -38,5 +43,5 @@ async def create_user(
 
 
 @router.put("/", response_model=UserPublic)
-async def update_user(user: UserUpdate, service: Annotated[UserService, Depends()]):
-    return service.update(user)
+async def update_user(body: UpdateUserBody, service: Annotated[UserService, Depends()]):
+    return service.update(body.user, body.info)
