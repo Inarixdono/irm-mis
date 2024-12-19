@@ -14,7 +14,7 @@ class User(CRUD):
         user_create: UserCreate,
         roles: list[int],
         department_id: int,
-    ):
+    ) -> UserModel:
         extra_data = {
             "info": self.__create_person(person_create),
             "password": get_password_hash(user_create.password),
@@ -23,7 +23,7 @@ class User(CRUD):
         }
         return super().create(UserModel, user_create, extra_data)
 
-    def update(self, user_update: UserUpdate):
+    def update(self, user_update: UserUpdate) -> UserModel:
         user_update.password = get_password_hash(user_update.password)
         return super().update(UserModel, user_update)
 
