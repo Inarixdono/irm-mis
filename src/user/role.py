@@ -17,8 +17,8 @@ if TYPE_CHECKING:
 
 
 class RoleBase(SQLModel):
-    name: str
-    description: str | None = None
+    name: str = Field(min_length=4, max_length=64, unique=True)
+    description: str | None = Field(default=None, min_length=8, max_length=255)
 
 
 class RoleCreate(RoleBase):
@@ -26,10 +26,10 @@ class RoleCreate(RoleBase):
 
 
 class RoleUpdate(ModelUpdate):
-    name: str | None = None
+    name: str | None = Field(default=None, min_length=4, max_length=64)
 
 
-class RolePublic(RoleBase):
+class RolePublic(Audit, RoleBase):
     id: int
 
 
@@ -42,13 +42,16 @@ class Role(Audit, RoleBase, table=True):
 async def read_role(role_id: int, service: Annotated[CRUD, Depends()]):
     return service.read(Role, role_id)
 
+
 @router.get("/", response_model=list[RolePublic])
 async def read_all(service: Annotated[CRUD, Depends()]):
     return service.read_all(Role)
 
+
 @router.post("/", response_model=RolePublic)
 async def create_role(role: RoleCreate, service: Annotated[CRUD, Depends()]):
     return service.create(Role, role)
+
 
 @router.put("/", response_model=RolePublic)
 async def update_role(role: RoleUpdate, service: Annotated[CRUD, Depends()]):

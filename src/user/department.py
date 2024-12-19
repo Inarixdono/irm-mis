@@ -17,26 +17,27 @@ router = APIRouter(
 
 
 class DepartmentBase(SQLModel):
-    name: str
-    description: str | None = None
+    name: str = Field(min_length=4, max_length=64, unique=True)
+    description: str | None = Field(default=None, min_length=8, max_length=255)
 
 
 class DepartmentCreate(DepartmentBase):
     pass
 
 
-class DepartmentUpdate(ModelUpdate):
-    name: str | None = None
-    description: str | None = None
+class DepartmentUpdate(DepartmentBase, ModelUpdate):
+    name: str | None = Field(default=None, max_length=64)
 
 
-class DepartementPublic(DepartmentBase):
+class DepartementPublic(Audit, DepartmentBase):
     id: int
 
 
 class Department(Audit, DepartmentBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    users: list["User"] = Relationship(back_populates="department", link_model=UserDepartmentLink)
+    users: list["User"] = Relationship(
+        back_populates="department", link_model=UserDepartmentLink
+    )
 
 
 @router.get("/{department_id}", response_model=DepartementPublic)
@@ -50,10 +51,14 @@ async def read_all(service: Annotated[CRUD, Depends()]):
 
 
 @router.post("/", response_model=DepartementPublic)
-async def create_department(department: DepartmentCreate, service: Annotated[CRUD, Depends()]):
+async def create_department(
+    department: DepartmentCreate, service: Annotated[CRUD, Depends()]
+):
     return service.create(Department, department)
 
 
 @router.put("/", response_model=DepartementPublic)
-async def update_department(department: DepartmentUpdate, service: Annotated[CRUD, Depends()]):
+async def update_department(
+    department: DepartmentUpdate, service: Annotated[CRUD, Depends()]
+):
     return service.update(Department, department)
