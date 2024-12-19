@@ -3,12 +3,20 @@ from .service import User as UserService
 from src.person.model import PersonCreate
 from typing import Annotated
 from fastapi import APIRouter, Depends, Body
+from sqlmodel import SQLModel
 
 router = APIRouter(
     prefix="/users",
     tags=["users"],
     responses={404: {"description": "Not found"}},
 )
+
+
+class CreateUserBody(SQLModel):
+    info: PersonCreate
+    user: UserCreate
+    roles: list[Annotated[int, Body(gt=0)]]
+    department_id: Annotated[int, Body(gt=0)] = None
 
 
 @router.get("/{user_id}", response_model=UserPublic)
@@ -23,13 +31,10 @@ async def read_all(service: Annotated[UserService, Depends()]):
 
 @router.post("/", response_model=UserPublic)
 async def create_user(
-    info: PersonCreate,
-    user: UserCreate,
+    body: CreateUserBody,
     service: Annotated[UserService, Depends()],
-    roles: Annotated[list[int], Body()],
-    department_id: Annotated[int, Body()] = None,
 ):
-    return service.create(info, user, roles, department_id)
+    return service.create(body.info, body.user, body.roles, body.department_id)
 
 
 @router.put("/", response_model=UserPublic)
