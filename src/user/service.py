@@ -16,7 +16,7 @@ class User(CRUD):
         department_id: int,
     ):
         extra_data = {
-            "info": self._create_person(person_create),
+            "info": self.__create_person(person_create),
             "password": get_password_hash(user_create.password),
             "roles": self._get_roles(roles),
             "department": self._get_department(department_id),
