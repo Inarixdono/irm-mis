@@ -42,6 +42,12 @@ def test_update_person(crud: CRUD):
     assert updated_person.updated_at is not None
 
 
+def test_delete_person(crud: CRUD):
+    person: Person = crud.delete(Person, 2)
+    assert not person.is_active
+    assert person.updated_at is not None
+
+
 def test_total_persons(crud: CRUD):
     total_persons = crud.read_all(Person)
-    assert len(total_persons) == 2
+    assert len(total_persons) == 1
