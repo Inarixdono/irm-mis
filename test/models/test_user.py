@@ -28,28 +28,35 @@ def test_first_department(crud: CRUD):
 
 def test_create_user(crud: CRUD):
     plain_password = user_example["password"]
-    user_example["password"] = get_password_hash(user_example["password"])
     user: User = crud.create(
         User,
         UserCreate(**user_example),
-        extra_data={"info": Person(**person_example)},
+        extra_data={
+            "info": Person(**person_example).sqlmodel_update({"created_by": 1}),
+            "password": get_password_hash(plain_password),
+        },
     )
 
     assert hasattr(user, "id")
     assert user.info.name == person_example["name"]
     assert user.info.identity_number == person_example["identity_number"]
+    assert user.info.created_by == 1
+    assert user.info.created_at is not None
+    assert user.info.updated_by is None
+    assert user.info.updated_at is None
+
     assert user.email == user_example["email"]
     assert plain_password != user.password
     assert user.branch_id == user_example["branch_id"]
     assert user.is_active
+    assert user.created_by == 1
     assert user.created_at is not None
+    assert user.updated_by is None
     assert user.updated_at is None
 
 
 def test_update_user(crud: CRUD):
-    user_to_update: User = crud.read(User, 2)
-    user_before = user_to_update.model_copy()
-    user_to_update.info.name = "SUGURU GETO"
+    user_before: User = crud.read(User, 2).model_copy()
     updated_user: User = crud.update(
         User,
         UserUpdate(
@@ -57,7 +64,6 @@ def test_update_user(crud: CRUD):
             email="getosuguru@spiritmanipulation.com",
             password=get_password_hash("jureisoujutsuuzumaki"),
         ),
-        update_data={"info": user_to_update.info},
     )
 
     assert updated_user.id == user_before.id
@@ -65,3 +71,15 @@ def test_update_user(crud: CRUD):
     assert updated_user.password != user_before.password
     assert updated_user.created_at == user_before.created_at
     assert updated_user.updated_at is not None
+
+
+def test_delete_user(crud: CRUD):
+    user: User = crud.delete(User, 2)
+    assert not user.is_active
+    assert user.updated_by == 1
+    assert user.updated_at is not None
+
+
+def test_total_users(crud: CRUD):
+    total_users = crud.read_all(User)
+    assert len(total_users) == 1
