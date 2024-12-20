@@ -48,6 +48,6 @@ def test_delete_person(crud: CRUD):
     assert person.updated_at is not None
 
 
-def test_total_persons(crud: CRUD):
-    total_persons = crud.read_all(Person)
-    assert len(total_persons) == 1
+def test_total_people(crud: CRUD):
+    total_people = crud.read_all(Person)
+    assert len(total_people) == 1
