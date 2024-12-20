@@ -8,6 +8,9 @@ from src.person.model import Person, PersonCreate, PersonUpdate
 
 
 class User(CRUD):
+    def __init__(self):
+        super().__init__(UserModel)
+
     def create(
         self,
         person_create: PersonCreate,
@@ -21,7 +24,7 @@ class User(CRUD):
             "roles": self._get_roles(roles),
             "department": self._get_department(department_id),
         }
-        return super().create(UserModel, user_create, extra_data)
+        return super().create(user_create, extra_data)
 
     def update(self, user_update: UserUpdate, person_update: PersonUpdate) -> UserModel:
         payload = {}
@@ -32,11 +35,11 @@ class User(CRUD):
         if person_update:
             payload["info"] = self.__update_person(person_update)
 
-        return super().update(UserModel, user_update)
+        return super().update(user_update)
 
     def __update_person(self, person_update: PersonUpdate) -> Person:
         update_data = person_update.model_dump(exclude_unset=True)
-        return super().read(Person, person_update.id).sqlmodel_update(update_data)
+        return super().read(person_update.id).sqlmodel_update(update_data)
 
     def __create_person(self, person_create: PersonCreate) -> Person:
         return Person.model_validate(
@@ -44,10 +47,10 @@ class User(CRUD):
         )
 
     def __get_role(self, role_id: int) -> Role:
-        return super().read(Role, role_id)
+        return self.session.get(Role, role_id)
 
     def _get_roles(self, roles: list[int]) -> list[Role]:
         return list(map(self.__get_role, roles))
 
     def _get_department(self, department_id: int) -> Department:
-        return super().read(Department, department_id) if department_id else None
+        return self.session.get(Department, department_id) if department_id else None

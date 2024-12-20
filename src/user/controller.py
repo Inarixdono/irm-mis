@@ -1,4 +1,4 @@
-from .model import UserCreate, UserUpdate, UserPublic, User
+from .model import UserCreate, UserUpdate, UserPublic
 from .service import User as UserService
 from src.person.model import PersonCreate, PersonUpdate
 from typing import Annotated
@@ -10,6 +10,8 @@ router = APIRouter(
     tags=["users"],
     responses={404: {"description": "Not found"}},
 )
+
+user_service = UserService()
 
 
 class CreateUserBody(SQLModel):
@@ -25,23 +27,27 @@ class UpdateUserBody(SQLModel):
 
 
 @router.get("/{user_id}", response_model=UserPublic)
-async def read_user(user_id: int, service: Annotated[UserService, Depends()]):
-    return service.read(User, user_id)
+async def read_user(
+    user_id: int, service: Annotated[UserService, Depends(user_service)]
+):
+    return service.read(user_id)
 
 
 @router.get("/", response_model=list[UserPublic])
-async def read_all(service: Annotated[UserService, Depends()]):
-    return service.read_all(User)
+async def read_all(service: Annotated[UserService, Depends(user_service)]):
+    return service.read_all()
 
 
 @router.post("/", response_model=UserPublic)
 async def create_user(
     body: CreateUserBody,
-    service: Annotated[UserService, Depends()],
+    service: Annotated[UserService, Depends(user_service)],
 ):
     return service.create(body.info, body.user, body.roles, body.department_id)
 
 
 @router.put("/", response_model=UserPublic)
-async def update_user(body: UpdateUserBody, service: Annotated[UserService, Depends()]):
+async def update_user(
+    body: UpdateUserBody, service: Annotated[UserService, Depends(user_service)]
+):
     return service.update(body.user, body.info)
