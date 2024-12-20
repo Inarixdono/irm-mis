@@ -40,25 +40,30 @@ class Department(Audit, DepartmentBase, table=True):
     )
 
 
+department_service = CRUD(Department)
+
+
 @router.get("/{department_id}", response_model=DepartementPublic)
-async def read_department(department_id: int, service: Annotated[CRUD, Depends()]):
-    return service.read(Department, department_id)
+async def read_department(
+    department_id: int, service: Annotated[CRUD, Depends(department_service)]
+):
+    return service.read(department_id)
 
 
 @router.get("/", response_model=list[DepartementPublic])
-async def read_all(service: Annotated[CRUD, Depends()]):
-    return service.read_all(Department)
+async def read_all(service: Annotated[CRUD, Depends(department_service)]):
+    return service.read_all()
 
 
 @router.post("/", response_model=DepartementPublic)
 async def create_department(
-    department: DepartmentCreate, service: Annotated[CRUD, Depends()]
+    department: DepartmentCreate, service: Annotated[CRUD, Depends(department_service)]
 ):
-    return service.create(Department, department)
+    return service.create(department)
 
 
 @router.put("/", response_model=DepartementPublic)
 async def update_department(
-    department: DepartmentUpdate, service: Annotated[CRUD, Depends()]
+    department: DepartmentUpdate, service: Annotated[CRUD, Depends(department_service)]
 ):
-    return service.update(Department, department)
+    return service.update(department)
