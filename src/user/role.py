@@ -38,21 +38,28 @@ class Role(Audit, RoleBase, table=True):
     users: list["User"] = Relationship(back_populates="roles", link_model=UserRoleLink)
 
 
+role_service = CRUD(Role)
+
+
 @router.get("/{role_id}", response_model=RolePublic)
-async def read_role(role_id: int, service: Annotated[CRUD, Depends()]):
-    return service.read(Role, role_id)
+async def read_role(role_id: int, service: Annotated[CRUD, Depends(role_service)]):
+    return service.read(role_id)
 
 
 @router.get("/", response_model=list[RolePublic])
-async def read_all(service: Annotated[CRUD, Depends()]):
-    return service.read_all(Role)
+async def read_all(service: Annotated[CRUD, Depends(role_service)]):
+    return service.read_all()
 
 
 @router.post("/", response_model=RolePublic)
-async def create_role(role: RoleCreate, service: Annotated[CRUD, Depends()]):
-    return service.create(Role, role)
+async def create_role(
+    role: RoleCreate, service: Annotated[CRUD, Depends(role_service)]
+):
+    return service.create(role)
 
 
 @router.put("/", response_model=RolePublic)
-async def update_role(role: RoleUpdate, service: Annotated[CRUD, Depends()]):
-    return service.update(Role, role)
+async def update_role(
+    role: RoleUpdate, service: Annotated[CRUD, Depends(role_service)]
+):
+    return service.update(role)
