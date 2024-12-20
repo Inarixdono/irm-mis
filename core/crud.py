@@ -11,39 +11,41 @@ from sqlmodel import select
 class CRUD:
     def __init__(
         self,
+        base_model: SQLModel = SQLModel,
+    ):
+        self.base_model = base_model
+
+    def __call__(
+        self,
         session: SessionDependency,
         current_user: Annotated[TokenData, Depends(get_current_user)],
     ):
         self.session = session
         self.current_user = current_user
 
-    def read(self, base_model: SQLModel, id: int) -> SQLModel:
-        resource = self.session.get(base_model, id)
+    def read(self, id: int) -> SQLModel:
+        resource = self.session.get(self.base_model, id)
         if not resource:
             raise HTTPException(status_code=404, detail="Resource not found")
         return resource
 
-    def read_all(self, base_model: SQLModel) -> list[SQLModel]:
-        if issubclass(base_model, Audit):
-            statement = select(base_model).where(base_model.is_active)
+    def read_all(self) -> list[SQLModel]:
+        if issubclass(self.base_model, Audit):
+            statement = select(self.base_model).where(self.base_model.is_active)
         else:
-            statement = select(base_model)
+            statement = select(self.base_model)
         return self.session.exec(statement).all()
 
-    def create(
-        self, base_model: SQLModel, model_create: SQLModel, extra_data: dict = {}
-    ) -> SQLModel:
-        if issubclass(base_model, Audit):
+    def create(self, model_create: SQLModel, extra_data: dict = {}) -> SQLModel:
+        if issubclass(self.base_model, Audit):
             extra_data.update({"created_by": self.current_user.id})
-        resource = base_model.model_validate(model_create, update=extra_data)
+        resource = self.base_model.model_validate(model_create, update=extra_data)
         return self.__commit(resource)
 
-    def update(
-        self, base_model: SQLModel, model_update: ModelUpdate, update_data: dict = {}
-    ) -> SQLModel:
-        resource = self.read(base_model, model_update.id)
+    def update(self, model_update: ModelUpdate, update_data: dict = {}) -> SQLModel:
+        resource = self.read(model_update.id)
 
-        if issubclass(base_model, Audit):
+        if issubclass(self.base_model, Audit):
             update_data.update(
                 {"updated_by": self.current_user.id, "updated_at": datetime.now()}
             )
@@ -52,10 +54,10 @@ class CRUD:
         resource.sqlmodel_update(resource_data, update=update_data)
         return self.__commit(resource)
 
-    def delete(self, base_model: SQLModel, id: int) -> SQLModel:
-        resource = self.read(base_model, id)
-        if issubclass(base_model, Audit):
-            self.update(base_model, ModelUpdate(id=id), {"is_active": False})
+    def delete(self, id: int) -> SQLModel:
+        resource = self.read(id)
+        if issubclass(self.base_model, Audit):
+            self.update(ModelUpdate(id=id), {"is_active": False})
             return resource
 
         self.session.delete(resource)
