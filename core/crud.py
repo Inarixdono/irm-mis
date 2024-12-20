@@ -24,7 +24,10 @@ class CRUD:
         return resource
 
     def read_all(self, base_model: SQLModel) -> list[SQLModel]:
-        statement = select(base_model)
+        if issubclass(base_model, Audit):
+            statement = select(base_model).where(base_model.is_active)
+        else:
+            statement = select(base_model)
         return self.session.exec(statement).all()
 
     def create(
@@ -38,7 +41,7 @@ class CRUD:
     def update(
         self, base_model: SQLModel, model_update: ModelUpdate, update_data: dict = {}
     ) -> SQLModel:
-        resource: SQLModel = self.session.get(base_model, model_update.id)
+        resource = self.read(base_model, model_update.id)
 
         if issubclass(base_model, Audit):
             update_data.update(
@@ -48,6 +51,16 @@ class CRUD:
         resource_data = model_update.model_dump(exclude_unset=True)
         resource.sqlmodel_update(resource_data, update=update_data)
         return self.__commit(resource)
+
+    def delete(self, base_model: SQLModel, id: int) -> SQLModel:
+        resource = self.read(base_model, id)
+        if issubclass(base_model, Audit):
+            self.update(base_model, ModelUpdate(id=id), {"is_active": False})
+            return resource
+
+        self.session.delete(resource)
+        self.session.delete(resource)
+        self.session.commit()
 
     def __commit(self, resource) -> SQLModel:
         self.session.add(resource)
