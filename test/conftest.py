@@ -48,8 +48,9 @@ def current_user(token: Token) -> TokenData:
 
 @pytest.fixture(scope="session", autouse=True)
 def crud(session: Session, current_user: TokenData) -> Generator[CRUD, None, None]:
+    crud = CRUD()
     with session as session:
-        yield CRUD(session, current_user)
+        yield crud(session, current_user)
 
 
 @pytest.fixture(scope="session", autouse=True)

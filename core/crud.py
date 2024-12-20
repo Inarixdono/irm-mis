@@ -22,6 +22,7 @@ class CRUD:
     ):
         self.session = session
         self.current_user = current_user
+        return self
 
     def read(self, id: int) -> SQLModel:
         resource = self.session.get(self.base_model, id)
