@@ -1,7 +1,8 @@
 import jwt
 from datetime import datetime, timedelta, timezone
 from core.config import settings
-from core.exceptions import InvalidCredentialsException
+from core.exceptions import InsufficientPermissionsException, InvalidCredentialsException
+from core.types import Role
 from src.auth.model import TokenData
 from src.user.model import User
 from typing import Annotated
@@ -57,3 +58,9 @@ def get_current_user(
         roles=payload.get("roles"),
         department=payload.get("department"),
     )
+
+
+def is_superuser(user: Annotated[TokenData, Depends(get_current_user)]):
+    if Role.SUPERUSER not in user.roles:
+        raise InsufficientPermissionsException()
+    return True
