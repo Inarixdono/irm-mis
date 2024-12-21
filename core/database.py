@@ -12,7 +12,6 @@ engine = create_engine(settings.DATABASE_DEVELOPMENT, connect_args=connect_args)
 def create_first_user(session: Session):
     from core.types import Role as RoleEnum, Department as DepartmentEnum
     from core.security import get_password_hash
-    from src.person.model import Person
     from src.branch.model import Branch
     from src.user.department import Department
     from src.user.role import Role
@@ -20,15 +19,13 @@ def create_first_user(session: Session):
     password_hash = get_password_hash(settings.SUPERUSER_PASSWORD)
 
     user = User(
-        info=Person(
-            name=settings.SUPERUSER_NAME,
-            identity_number=settings.SUPERUSER_DOCUMENT_NUMBER,
-        ),
+        name=settings.SUPERUSER_NAME,
+        identity_number=settings.SUPERUSER_DOCUMENT_NUMBER,
         email=settings.SUPERUSER_EMAIL,
         password=password_hash,
         branch=Branch(name=settings.SUPERUSER_BRANCH),
         department=Department(name=DepartmentEnum.DEVELOPMENT),
-        roles=[Role(name=RoleEnum.SUPERUSER)],
+        role=Role(name=RoleEnum.SUPERUSER),
     )
 
     session.add(user)

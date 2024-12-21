@@ -1,9 +1,7 @@
 from .model import UserCreate, UserUpdate, UserPublic
 from .service import User as UserService
-from src.person.model import PersonCreate, PersonUpdate
 from typing import Annotated
-from fastapi import APIRouter, Depends, Body
-from sqlmodel import SQLModel
+from fastapi import APIRouter, Depends
 
 router = APIRouter(
     prefix="/users",
@@ -12,18 +10,6 @@ router = APIRouter(
 )
 
 user_service = UserService()
-
-
-class CreateUserBody(SQLModel):
-    info: PersonCreate
-    user: UserCreate
-    roles: list[Annotated[int, Body(gt=0)]]
-    department_id: Annotated[int, Body(gt=0)] = None
-
-
-class UpdateUserBody(SQLModel):
-    user: UserUpdate
-    info: PersonUpdate | None = None
 
 
 @router.get("/{user_id}", response_model=UserPublic)
@@ -40,14 +26,14 @@ async def read_all(service: Annotated[UserService, Depends(user_service)]):
 
 @router.post("/", response_model=UserPublic)
 async def create_user(
-    body: CreateUserBody,
+    body: UserCreate,
     service: Annotated[UserService, Depends(user_service)],
 ):
-    return service.create(body.info, body.user, body.roles, body.department_id)
+    return service.create(body)
 
 
 @router.put("/", response_model=UserPublic)
 async def update_user(
-    body: UpdateUserBody, service: Annotated[UserService, Depends(user_service)]
+    body: UserUpdate, service: Annotated[UserService, Depends(user_service)]
 ):
-    return service.update(body.user, body.info)
+    return service.update(body)

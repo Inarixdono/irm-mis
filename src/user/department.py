@@ -1,4 +1,3 @@
-from .link import UserDepartmentLink
 from core.types import ModelUpdate, Audit
 from core.crud import CRUD
 from typing import TYPE_CHECKING, Annotated
@@ -35,9 +34,7 @@ class DepartementPublic(Audit, DepartmentBase):
 
 class Department(Audit, DepartmentBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    users: list["User"] = Relationship(
-        back_populates="department", link_model=UserDepartmentLink
-    )
+    users: list["User"] = Relationship(back_populates="department")
 
 
 department_service = CRUD(Department)

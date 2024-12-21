@@ -1,7 +1,10 @@
 import jwt
 from datetime import datetime, timedelta, timezone
 from core.config import settings
-from core.exceptions import InsufficientPermissionsException, InvalidCredentialsException
+from core.exceptions import (
+    InsufficientPermissionsException,
+    InvalidCredentialsException,
+)
 from core.types import Role
 from src.auth.model import TokenData
 from src.user.model import User
@@ -31,10 +34,10 @@ def create_access_token(user: User, expires: timedelta | None = None):
     return jwt.encode(
         payload={
             "id": user.id,
-            "name": user.info.name,
+            "name": user.name,
             "email": user.email,
-            "roles": [role.name for role in user.roles],
-            "department": user.department.name if user.department else None,
+            "role": user.role.name,
+            "department": user.department.name,
             "exp": expire,
         },
         key=settings.SECRET_KEY,
@@ -61,6 +64,6 @@ def get_current_user(
 
 
 def is_superuser(user: Annotated[TokenData, Depends(get_current_user)]):
-    if Role.SUPERUSER not in user.roles:
+    if user.role != Role.SUPERUSER:
         raise InsufficientPermissionsException()
     return True

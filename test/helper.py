@@ -11,8 +11,12 @@ person_example = {
 }
 
 user_example = {
+    "name": "SATORU GOJO",
+    "identity_number": "40255632169",
     "email": "gojosatoru@infinitevoid.com",
     "branch_id": 1,
+    "role_id": 1,
+    "department_id": 1,
     "password": "hollowtechniquepurple",
 }
 

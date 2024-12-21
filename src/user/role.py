@@ -1,4 +1,3 @@
-from .link import UserRoleLink
 from core.types import ModelUpdate, Audit
 from core.crud import CRUD
 from typing import TYPE_CHECKING, Annotated
@@ -35,7 +34,7 @@ class RolePublic(Audit, RoleBase):
 
 class Role(Audit, RoleBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    users: list["User"] = Relationship(back_populates="roles", link_model=UserRoleLink)
+    users: list["User"] = Relationship(back_populates="role")
 
 
 role_service = CRUD(Role)

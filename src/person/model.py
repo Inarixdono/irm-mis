@@ -1,10 +1,6 @@
 from core.types import Address, Audit, IdentityType, ModelUpdate
-from typing import TYPE_CHECKING
 from sqlalchemy import CHAR
-from sqlmodel import SQLModel, Field, Relationship
-
-if TYPE_CHECKING:
-    from ..user.model import User
+from sqlmodel import SQLModel, Field
 
 
 class PersonBase(SQLModel):
@@ -32,4 +28,3 @@ class PersonPublic(Audit, PersonBase):
 
 class Person(Audit, PersonCreate, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    user: "User" = Relationship(back_populates="info")
