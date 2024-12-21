@@ -1,11 +1,11 @@
-from ..helper import person_example
+from ..helper import client_example
 from core.crud import CRUD
 from core.config import settings
-from src.person.model import Person, PersonCreate, PersonUpdate
+from src.client.model import Client, ClientCreate, ClientUpdate
 
 
 def test_first_person(crud: CRUD):
-    person: Person = crud.read(Person, 1)
+    person: Client = crud.read(Client, 1)
     assert person.name == settings.SUPERUSER_NAME
     assert person.identity_number == settings.SUPERUSER_DOCUMENT_NUMBER
     assert person.is_active
@@ -14,23 +14,23 @@ def test_first_person(crud: CRUD):
 
 
 def test_create_person(crud: CRUD):
-    person_create = PersonCreate(**person_example)
-    person: Person = crud.create(Person, person_create)
+    person_create = ClientCreate(**client_example)
+    person: Client = crud.create(Client, person_create)
     assert hasattr(person, "id")
-    assert person.name == person_example["name"]
-    assert person.identity_number == person_example["identity_number"]
+    assert person.name == client_example["name"]
+    assert person.identity_number == client_example["identity_number"]
     assert person.is_active
     assert person.created_at is not None
     assert person.updated_at is None
 
 
 def test_update_person(crud: CRUD):
-    person_to_update: Person = crud.read(Person, 2)
+    person_to_update: Client = crud.read(Client, 2)
     person_to_update.name = "SUGURU GETO"
     person_to_update.identity_number = "45856988521"
-    updated_person: Person = crud.update(
-        Person,
-        PersonUpdate(
+    updated_person: Client = crud.update(
+        Client,
+        ClientUpdate(
             id=person_to_update.id,
             name=person_to_update.name,
             identity_number=person_to_update.identity_number,
@@ -43,11 +43,11 @@ def test_update_person(crud: CRUD):
 
 
 def test_delete_person(crud: CRUD):
-    person: Person = crud.delete(Person, 2)
+    person: Client = crud.delete(Client, 2)
     assert not person.is_active
     assert person.updated_at is not None
 
 
 def test_total_people(crud: CRUD):
-    total_people = crud.read_all(Person)
+    total_people = crud.read_all(Client)
     assert len(total_people) == 1

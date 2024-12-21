@@ -5,9 +5,15 @@ branch_example = {
     "phone_number": "0000000000",
 }
 
-person_example = {
+client_example = {
     "name": "SATORU GOJO",
     "identity_number": "40255632169",
+    "phone_number": "0000000000",
+    "branch_id": 1,
+    "street": "JUJUTSU TECHNICAL COLLEGE",
+    "city": "TOKYO",
+    "state": "TOKYO",
+    "reference": "WHERE FUSHIGURO TOJI STABBED ME",
 }
 
 user_example = {
@@ -26,12 +32,12 @@ def create_branch(client: TestClient):
 
 
 def create_person(client: TestClient):
-    return client.post("/persons/", json=person_example)
+    return client.post("/persons/", json=client_example)
 
 
 def create_user(client: TestClient):
     data = {
-        "info": person_example,
+        "info": client_example,
         "user": user_example,
         "roles": [1],
     }
