@@ -1,3 +1,4 @@
+from core.security import is_admin
 from typing import Annotated
 from src.client.model import ClientCreate, ClientUpdate, ClientPublic
 from src.client.service import Client as PersonService
@@ -37,3 +38,12 @@ async def update_client(
     service: Annotated[PersonService, Depends(person_service)],
 ):
     return service.update(body)
+
+
+@router.delete("/{client_id}")
+async def delete_client(
+    client_id: int,
+    service: Annotated[PersonService, Depends(person_service)],
+    is_admin: bool = Depends(is_admin),
+):
+    return service.delete(client_id)

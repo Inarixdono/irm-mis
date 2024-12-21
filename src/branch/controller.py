@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends
-from typing import Annotated
+from core.security import is_admin
 from src.branch.model import BranchCreate, BranchPublic, BranchUpdate
 from src.branch.service import Branch as BranchService
+from typing import Annotated
+from fastapi import APIRouter, Depends
 
 
 router = APIRouter(
@@ -17,7 +18,7 @@ branch_service = BranchService()
 async def read_branch(
     id: int, service: Annotated[BranchService, Depends(branch_service)]
 ):
-    return service.read(id) 
+    return service.read(id)
 
 
 @router.get("/", response_model=list[BranchPublic])
@@ -27,13 +28,26 @@ async def read_all(service: Annotated[BranchService, Depends(branch_service)]):
 
 @router.post("/", response_model=BranchPublic)
 async def create_branch(
-    branch: BranchCreate, service: Annotated[BranchService, Depends(branch_service)]
+    branch: BranchCreate,
+    service: Annotated[BranchService, Depends(branch_service)],
+    is_admin: bool = Depends(is_admin),
 ):
     return service.create(branch)
 
 
 @router.put("/", response_model=BranchPublic)
 async def update_branch(
-    branch: BranchUpdate, service: Annotated[BranchService, Depends(branch_service)]
+    branch: BranchUpdate,
+    service: Annotated[BranchService, Depends(branch_service)],
+    is_admin: bool = Depends(is_admin),
 ):
     return service.update(branch)
+
+
+@router.delete("/{id}")
+async def delete_branch(
+    id: int,
+    service: Annotated[BranchService, Depends(branch_service)],
+    is_admin: bool = Depends(is_admin),
+):
+    return service.delete(id)

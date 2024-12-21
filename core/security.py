@@ -58,12 +58,18 @@ def get_current_user(
         id=payload.get("id"),
         name=payload.get("name"),
         email=payload.get("email"),
-        roles=payload.get("roles"),
+        role=payload.get("role"),
         department=payload.get("department"),
     )
 
 
 def is_superuser(user: Annotated[TokenData, Depends(get_current_user)]):
     if user.role != Role.SUPERUSER:
+        raise InsufficientPermissionsException()
+    return True
+
+
+def is_admin(user: Annotated[TokenData, Depends(get_current_user)]):
+    if user.role not in [Role.SUPERUSER, Role.ADMIN]:
         raise InsufficientPermissionsException()
     return True

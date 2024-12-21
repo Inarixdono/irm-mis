@@ -1,11 +1,13 @@
 from .model import UserCreate, UserUpdate, UserPublic
 from .service import User as UserService
+from core.security import is_admin
 from typing import Annotated
 from fastapi import APIRouter, Depends
 
 router = APIRouter(
     prefix="/users",
     tags=["users"],
+    dependencies=[Depends(is_admin)],
     responses={404: {"description": "Not found"}},
 )
 

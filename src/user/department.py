@@ -1,5 +1,6 @@
-from core.types import ModelUpdate, Audit
 from core.crud import CRUD
+from core.types import ModelUpdate, Audit
+from core.security import is_admin
 from typing import TYPE_CHECKING, Annotated
 from fastapi import APIRouter, Depends
 from sqlmodel import SQLModel, Field, Relationship
@@ -11,6 +12,7 @@ if TYPE_CHECKING:
 router = APIRouter(
     prefix="/departments",
     tags=["departments"],
+    dependencies=[Depends(is_admin)],
     responses={404: {"description": "Not found"}},
 )
 
