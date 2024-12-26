@@ -12,4 +12,4 @@ def test_token_decode(current_user: TokenData):
     assert current_user.email == settings.SUPERUSER_EMAIL
     assert current_user.name == settings.SUPERUSER_NAME
     assert current_user.department == Department.DEVELOPMENT
-    assert Role.SUPERUSER in current_user.roles
+    assert current_user.role == Role.SUPERUSER
