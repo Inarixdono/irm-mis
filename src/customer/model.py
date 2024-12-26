@@ -3,7 +3,7 @@ from sqlalchemy import CHAR
 from sqlmodel import SQLModel, Field
 
 
-class ClientBase(SQLModel):
+class CustomerBase(SQLModel):
     name: str = Field(min_length=5, max_length=128, index=True)
     identity_type: IdentityType = IdentityType.NATIONAL_ID
     identity_number: str = Field(min_length=8, max_length=14, unique=True)
@@ -13,11 +13,11 @@ class ClientBase(SQLModel):
     branch_id: int = Field(foreign_key="branch.id")
 
 
-class ClientCreate(Address, ClientBase):
+class CustomerCreate(Address, CustomerBase):
     pass
 
 
-class ClientUpdate(Address, ClientBase, ModelUpdate):
+class CustomerUpdate(Address, CustomerBase, ModelUpdate):
     name: str | None = Field(default=None, min_length=5, max_length=128)
     identity_type: IdentityType | None = None
     identity_number: str | None = Field(default=None, min_length=8, max_length=14)
@@ -25,9 +25,9 @@ class ClientUpdate(Address, ClientBase, ModelUpdate):
     branch_id: int | None = None
 
 
-class ClientPublic(Audit, Address, ClientBase):
+class CustomerPublic(Audit, Address, CustomerBase):
     id: int
 
 
-class Client(Audit, ClientCreate, table=True):
+class Customer(Audit, CustomerCreate, table=True):
     id: int | None = Field(default=None, primary_key=True)
