@@ -26,7 +26,7 @@ def test_read_all_customers(client: TestClient, headers: dict):
     assert len(response.json()) == 1
 
 
-def test_update_client(client: TestClient, headers: dict):
+def test_update_customer(client: TestClient, headers: dict):
     customer_before: dict = client.get("/customers/1", headers=headers).json()
     customer_to_update = customer_before.copy()
     customer_to_update["name"] = "SUGURU GETO"
