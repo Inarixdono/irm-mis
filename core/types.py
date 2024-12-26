@@ -3,8 +3,16 @@ from datetime import datetime
 from sqlmodel import SQLModel, Field
 
 
-class UpdateModel(SQLModel):
+class TableModel(SQLModel):
+    id: int | None = Field(default=None, gt=0, primary_key=True)
+
+
+class PublicModel(SQLModel):
     id: int = Field(gt=0)
+
+
+class UpdateModel(PublicModel):
+    pass
 
 
 class Address:
