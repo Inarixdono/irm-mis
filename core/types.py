@@ -39,6 +39,6 @@ class Department(str, Enum):
     ADMINISTRATION = "Administration"
     ACCOUNTING = "Accounting"
     SALES = "Sales"
-    CXC = "CXC"
+    RECEIVABLES = "Receivables"
     BILLING = "Billing"
-    COSTUMER_SERVICE = "Costumer Service"
+    CUSTOMER_SERVICE = "Customer Service"
