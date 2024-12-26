@@ -1,4 +1,11 @@
-from core.types import Address, Audit, IdentityType, UpdateModel
+from core.types import (
+    Address,
+    Audit,
+    TableModel,
+    PublicModel,
+    UpdateModel,
+    IdentityType,
+)
 from sqlalchemy import CHAR
 from sqlmodel import SQLModel, Field
 
@@ -17,6 +24,10 @@ class CustomerCreate(Address, CustomerBase):
     pass
 
 
+class CustomerPublic(Audit, Address, CustomerBase, PublicModel):
+    pass
+
+
 class CustomerUpdate(Address, CustomerBase, UpdateModel):
     name: str | None = Field(default=None, min_length=5, max_length=128)
     identity_type: IdentityType | None = None
@@ -25,9 +36,5 @@ class CustomerUpdate(Address, CustomerBase, UpdateModel):
     branch_id: int | None = None
 
 
-class CustomerPublic(Audit, Address, CustomerBase):
-    id: int
-
-
-class Customer(Audit, CustomerCreate, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class Customer(Audit, CustomerCreate, TableModel, table=True):
+    pass
