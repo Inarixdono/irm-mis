@@ -30,6 +30,10 @@ class Audit:
     updated_at: datetime | None = None
 
 
+class Auditable(Audit, TableModel):
+    pass
+
+
 class IdentityType(str, Enum):
     NATIONAL_ID = "national_id"
     PASSPORT = "passport"
