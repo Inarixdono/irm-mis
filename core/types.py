@@ -25,13 +25,13 @@ class Audit:
 class IdentityType(str, Enum):
     NATIONAL_ID = "national_id"
     PASSPORT = "passport"
+    RNC = "rnc"
 
 
 class Role(str, Enum):
     SUPERUSER = "Superuser"
     ADMIN = "Admin"
-    CLIENT = "Client"
-    EMPLOYEE = "Employee"
+    GUEST = "Guest"
 
 
 class Department(str, Enum):
