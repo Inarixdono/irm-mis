@@ -1,5 +1,5 @@
 from core.crud import CRUD
-from core.types import UpdateModel, Audit
+from core.types import Audit, TableModel, PublicModel, UpdateModel
 from core.security import is_admin
 from typing import TYPE_CHECKING, Annotated
 from fastapi import APIRouter, Depends
@@ -26,16 +26,15 @@ class DepartmentCreate(DepartmentBase):
     pass
 
 
+class DepartementPublic(Audit, DepartmentBase, PublicModel):
+    pass
+
+
 class DepartmentUpdate(DepartmentBase, UpdateModel):
     name: str | None = Field(default=None, max_length=64)
 
 
-class DepartementPublic(Audit, DepartmentBase):
-    id: int
-
-
-class Department(Audit, DepartmentBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class Department(Audit, DepartmentBase, TableModel, table=True):
     users: list["User"] = Relationship(back_populates="department")
 
 
