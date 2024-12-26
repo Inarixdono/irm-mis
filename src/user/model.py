@@ -1,4 +1,4 @@
-from core.types import ModelUpdate, SQLModel, Audit
+from core.types import UpdateModel, SQLModel, Audit
 from typing import TYPE_CHECKING
 from sqlalchemy import CHAR
 from sqlmodel import Field, Relationship
@@ -26,7 +26,7 @@ class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=64)
 
 
-class UserUpdate(ModelUpdate, UserBase):
+class UserUpdate(UpdateModel, UserBase):
     name: str | None = Field(default=None, min_length=8, max_length=64)
     identity_number: str | None = Field(default=None, min_length=11, max_length=11)
     email: str | None = Field(default=None, min_length=8, max_length=64)

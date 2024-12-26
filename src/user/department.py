@@ -1,5 +1,5 @@
 from core.crud import CRUD
-from core.types import ModelUpdate, Audit
+from core.types import UpdateModel, Audit
 from core.security import is_admin
 from typing import TYPE_CHECKING, Annotated
 from fastapi import APIRouter, Depends
@@ -26,7 +26,7 @@ class DepartmentCreate(DepartmentBase):
     pass
 
 
-class DepartmentUpdate(DepartmentBase, ModelUpdate):
+class DepartmentUpdate(DepartmentBase, UpdateModel):
     name: str | None = Field(default=None, max_length=64)
 
 

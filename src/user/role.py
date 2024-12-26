@@ -1,5 +1,5 @@
 from core.crud import CRUD
-from core.types import ModelUpdate, Audit
+from core.types import UpdateModel, Audit
 from core.security import is_admin
 from typing import TYPE_CHECKING, Annotated
 from fastapi import APIRouter, Depends
@@ -26,7 +26,7 @@ class RoleCreate(RoleBase):
     pass
 
 
-class RoleUpdate(ModelUpdate):
+class RoleUpdate(UpdateModel):
     name: str | None = Field(default=None, min_length=4, max_length=64)
 
 

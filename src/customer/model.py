@@ -1,4 +1,4 @@
-from core.types import Address, Audit, IdentityType, ModelUpdate
+from core.types import Address, Audit, IdentityType, UpdateModel
 from sqlalchemy import CHAR
 from sqlmodel import SQLModel, Field
 
@@ -17,7 +17,7 @@ class CustomerCreate(Address, CustomerBase):
     pass
 
 
-class CustomerUpdate(Address, CustomerBase, ModelUpdate):
+class CustomerUpdate(Address, CustomerBase, UpdateModel):
     name: str | None = Field(default=None, min_length=5, max_length=128)
     identity_type: IdentityType | None = None
     identity_number: str | None = Field(default=None, min_length=8, max_length=14)

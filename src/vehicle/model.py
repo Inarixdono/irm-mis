@@ -1,4 +1,4 @@
-from core.types import ModelUpdate, Audit, VehicleStatus
+from core.types import UpdateModel, Audit, VehicleStatus
 from datetime import datetime
 from sqlalchemy import CHAR, DOUBLE
 from sqlmodel import SQLModel, Field
@@ -33,7 +33,7 @@ class VehicleCreate(VehicleBase):
     pass
 
 
-class VehicleUpdate(VehicleBase, ModelUpdate):
+class VehicleUpdate(VehicleBase, UpdateModel):
     vin: str | None = Field(default=None, max_length=32)
     model_id: int | None = None
     year: int | None = None

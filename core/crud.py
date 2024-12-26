@@ -1,5 +1,5 @@
 from core.security import get_current_user
-from core.types import Audit, ModelUpdate
+from core.types import Audit, UpdateModel
 from core.database import SessionDependency, SQLModel
 from src.auth.model import TokenData
 from typing import Annotated
@@ -51,7 +51,7 @@ class CRUD:
         resource = self.base_model.model_validate(model_create, update=extra_data)
         return self.__commit(resource)
 
-    def update(self, model_update: ModelUpdate, update_data: dict = {}) -> SQLModel:
+    def update(self, model_update: UpdateModel, update_data: dict = {}) -> SQLModel:
         resource = self.read(model_update.id)
 
         if issubclass(self.base_model, Audit):
@@ -66,7 +66,7 @@ class CRUD:
     def delete(self, id: int) -> SQLModel:
         resource = self.read(id)
         if issubclass(self.base_model, Audit):
-            self.update(ModelUpdate(id=id), {"is_active": False})
+            self.update(UpdateModel(id=id), {"is_active": False})
             return resource
 
         self.session.delete(resource)

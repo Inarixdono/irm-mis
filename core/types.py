@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlmodel import SQLModel, Field
 
 
-class ModelUpdate(SQLModel):
+class UpdateModel(SQLModel):
     id: int = Field(gt=0)
 
 

@@ -1,4 +1,4 @@
-from core.types import Address, Audit, ModelUpdate, SQLModel
+from core.types import Address, Audit, UpdateModel, SQLModel
 from typing import TYPE_CHECKING
 from sqlalchemy import CHAR
 from sqlmodel import Field, Relationship
@@ -19,7 +19,7 @@ class BranchCreate(Address, BranchBase):
     pass
 
 
-class BranchUpdate(BranchBase, ModelUpdate):
+class BranchUpdate(BranchBase, UpdateModel):
     name: str | None = Field(default=None, max_length=128, unique=True)
 
 

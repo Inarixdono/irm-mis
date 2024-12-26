@@ -1,5 +1,5 @@
 from core.crud import CRUD
-from core.types import ModelUpdate, Audit, VehicleType
+from core.types import UpdateModel, Audit, VehicleType
 from core.security import is_admin
 from fastapi import APIRouter, Depends
 from sqlmodel import SQLModel, Field
@@ -21,7 +21,7 @@ class VehicleModelCreate(VehicleModelBase):
     pass
 
 
-class VehicleModelUpdate(VehicleModelBase, ModelUpdate):
+class VehicleModelUpdate(VehicleModelBase, UpdateModel):
     name: str | None = Field(default=None, max_length=64)
     vehicle_type: VehicleType | None = None
     make_id: int | None = None

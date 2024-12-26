@@ -1,5 +1,5 @@
 from core.crud import CRUD
-from core.types import ModelUpdate, Audit
+from core.types import UpdateModel, Audit
 from core.security import is_admin
 from fastapi import APIRouter, Depends
 from sqlmodel import SQLModel, Field
@@ -20,7 +20,7 @@ class MakeCreate(MakeBase):
     pass
 
 
-class MakeUpdate(MakeBase, ModelUpdate):
+class MakeUpdate(MakeBase, UpdateModel):
     name: str | None = Field(default=None, max_length=64)
 
 
