@@ -1,4 +1,4 @@
-from core.types import UpdateModel, Audit, VehicleStatus
+from core.types import Audit, TableModel, PublicModel, UpdateModel, VehicleStatus
 from datetime import datetime
 from sqlalchemy import CHAR, DOUBLE
 from sqlmodel import SQLModel, Field
@@ -33,6 +33,10 @@ class VehicleCreate(VehicleBase):
     pass
 
 
+class VehiclePublic(Audit, VehicleBase, PublicModel):
+    pass
+
+
 class VehicleUpdate(VehicleBase, UpdateModel):
     vin: str | None = Field(default=None, max_length=32)
     model_id: int | None = None
@@ -47,9 +51,5 @@ class VehicleUpdate(VehicleBase, UpdateModel):
     branch_id: int | None = None
 
 
-class VehiclePublic(Audit, VehicleBase):
-    id: int
-
-
-class Vehicle(Audit, VehicleBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class Vehicle(Audit, VehicleBase, TableModel, table=True):
+    pass
