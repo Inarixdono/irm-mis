@@ -1,5 +1,5 @@
 from core.crud import CRUD
-from core.types import UpdateModel, Audit
+from core.types import Audit, TableModel, PublicModel, UpdateModel
 from core.security import is_admin
 from typing import TYPE_CHECKING, Annotated
 from fastapi import APIRouter, Depends
@@ -26,16 +26,15 @@ class RoleCreate(RoleBase):
     pass
 
 
-class RoleUpdate(UpdateModel):
+class RolePublic(Audit, RoleBase, PublicModel):
+    pass
+
+
+class RoleUpdate(RoleBase, UpdateModel):
     name: str | None = Field(default=None, min_length=4, max_length=64)
 
 
-class RolePublic(Audit, RoleBase):
-    id: int
-
-
-class Role(Audit, RoleBase, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class Role(Audit, RoleBase, TableModel, table=True):
     users: list["User"] = Relationship(back_populates="role")
 
 
