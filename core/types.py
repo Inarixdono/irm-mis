@@ -42,3 +42,23 @@ class Department(str, Enum):
     RECEIVABLES = "Receivables"
     BILLING = "Billing"
     CUSTOMER_SERVICE = "Customer Service"
+
+
+class CustomerStatus(str, Enum):
+    ACTIVE = "Active"
+    INACTIVE = "Inactive"
+    BLACKLISTED = "Blacklisted"
+
+
+class VehicleType(str, Enum):
+    MOTORCYCLE = "Motorcycle"
+    SCOOTER = "Scooter"
+    FOUR_WHEELER = "Four Wheeler"
+
+
+class VehicleStatus(str, Enum):
+    AVAILABLE = "Available"
+    SOLD = "Sold"
+    SETTLED = "Settled"
+    SEIZED = "Seized"
+    STOLEN = "Stolen"
