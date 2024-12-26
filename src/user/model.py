@@ -1,7 +1,7 @@
-from core.types import UpdateModel, SQLModel, Audit
+from core.types import Audit, TableModel, PublicModel, UpdateModel
 from typing import TYPE_CHECKING
 from sqlalchemy import CHAR
-from sqlmodel import Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship
 
 
 if TYPE_CHECKING:
@@ -26,7 +26,11 @@ class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=64)
 
 
-class UserUpdate(UpdateModel, UserBase):
+class UserPublic(Audit, UserBase, PublicModel):
+    pass
+
+
+class UserUpdate(UserBase, UpdateModel):
     name: str | None = Field(default=None, min_length=8, max_length=64)
     identity_number: str | None = Field(default=None, min_length=11, max_length=11)
     email: str | None = Field(default=None, min_length=8, max_length=64)
@@ -36,12 +40,7 @@ class UserUpdate(UpdateModel, UserBase):
     department_id: int | None = Field(default=None, gt=0)
 
 
-class UserPublic(Audit, UserBase):
-    id: int
-
-
-class User(Audit, UserBase, table=True):
-    id: int | None = Field(default=None, gt=0, primary_key=True)
+class User(Audit, UserBase, TableModel, table=True):
     password: str
     branch: "Branch" = Relationship(back_populates="users")
     role: "Role" = Relationship(back_populates="users")
