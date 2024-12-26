@@ -1,5 +1,5 @@
 from core.crud import CRUD
-from core.types import UpdateModel, Audit, VehicleType
+from core.types import Audit, TableModel, PublicModel, UpdateModel, VehicleType
 from core.security import is_admin
 from fastapi import APIRouter, Depends
 from sqlmodel import SQLModel, Field
@@ -21,20 +21,18 @@ class VehicleModelCreate(VehicleModelBase):
     pass
 
 
+class VehicleModelPublic(Audit, VehicleModelBase, PublicModel):
+    pass
+
+
 class VehicleModelUpdate(VehicleModelBase, UpdateModel):
     name: str | None = Field(default=None, max_length=64)
     vehicle_type: VehicleType | None = None
     make_id: int | None = None
 
 
-class VehicleModelPublic(Audit, VehicleModelBase):
-    id: int
-
-
-class VehicleModel(Audit, VehicleModelBase, table=True):
+class VehicleModel(Audit, VehicleModelBase, TableModel, table=True):
     __tablename__ = "vehicle_model"
-
-    id: int | None = Field(default=None, primary_key=True)
 
 
 class VehicleModelService(CRUD):
