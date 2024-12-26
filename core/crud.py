@@ -25,7 +25,15 @@ class CRUD:
         return self
 
     def read(self, id: int) -> SQLModel:
-        resource = self.session.get(self.base_model, id)
+        if issubclass(self.base_model, Audit):
+            resource = self.session.exec(
+                select(self.base_model).where(
+                    self.base_model.id == id, self.base_model.is_active
+                )
+            ).first()
+        else:
+            resource = self.session.get(self.base_model, id)
+
         if not resource:
             raise HTTPException(status_code=404, detail="Resource not found")
         return resource
