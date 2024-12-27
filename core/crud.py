@@ -38,13 +38,8 @@ class CRUD:
 
     def update(self, model_update: UpdateModel, update_data: dict = {}) -> TableModel:
         resource = self.read(model_update.id)
-
-        update_data.update(
-            {"updated_by": self.current_user.id, "updated_at": datetime.now()}
-        )
-
-        resource_data = model_update.model_dump(exclude_unset=True)
-        resource.sqlmodel_update(resource_data, update=update_data)
+        update_fields = self.__set_update_data(model_update, update_data)
+        resource.sqlmodel_update(update_fields, update=update_data)
         return self.__commit(resource)
 
     def delete(self, id: int) -> TableModel:
@@ -64,8 +59,21 @@ class CRUD:
         return resource
 
     def __validate_model(self, incoming_data: SQLModel, extra_data: dict) -> TableModel:
-        extra_data.update({"created_by": self.current_user.id})
+        self.__audit_create(extra_data)
         return self.base_model.model_validate(incoming_data, update=extra_data)
+
+    def __set_update_data(self, update_model: UpdateModel, update_data: dict) -> dict:
+        self.__audit_update(update_data)
+        update_fields = update_model.model_dump(exclude_unset=True)
+        return update_fields
+
+    def __audit_create(self, extra_data: dict) -> dict:
+        extra_data.update({"created_by": self.current_user.id})
+
+    def __audit_update(self, update_data: dict) -> dict:
+        update_data.update(
+            {"updated_by": self.current_user.id, "updated_at": datetime.now()}
+        )
 
     def __commit(self, resource) -> TableModel:
         self.session.add(resource)
