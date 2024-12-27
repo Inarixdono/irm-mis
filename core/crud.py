@@ -62,16 +62,16 @@ class CRUD:
         self.__audit_create(extra_data)
         return self.base_model.model_validate(incoming_data, update=extra_data)
 
-    def __set_update_data(self, update_model: UpdateModel, update_data: dict) -> dict:
-        self.__audit_update(update_data)
-        update_fields = update_model.model_dump(exclude_unset=True)
+    def __set_update_data(self, incoming_data: UpdateModel, extra_data: dict) -> dict:
+        self.__audit_update(extra_data)
+        update_fields = incoming_data.model_dump(exclude_unset=True)
         return update_fields
 
     def __audit_create(self, extra_data: dict) -> dict:
         extra_data.update({"created_by": self.current_user.id})
 
-    def __audit_update(self, update_data: dict) -> dict:
-        update_data.update(
+    def __audit_update(self, extra_data: dict) -> dict:
+        extra_data.update(
             {"updated_by": self.current_user.id, "updated_at": datetime.now()}
         )
 
