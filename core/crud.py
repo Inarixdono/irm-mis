@@ -64,8 +64,7 @@ class CRUD:
 
     def __set_update_data(self, incoming_data: UpdateModel, extra_data: dict) -> dict:
         self.__audit_update(extra_data)
-        update_fields = incoming_data.model_dump(exclude_unset=True)
-        return update_fields
+        return incoming_data.model_dump(exclude_unset=True)
 
     def __audit_create(self, extra_data: dict) -> dict:
         extra_data.update({"created_by": self.current_user.id})
