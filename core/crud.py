@@ -1,6 +1,6 @@
 from core.database import SessionDependency, SQLModel
 from core.security import get_current_user
-from core.types import  Auditable, TableModel, UpdateModel
+from core.types import Auditable, TableModel, UpdateModel
 from src.auth.model import TokenData
 from typing import Annotated
 from datetime import datetime
@@ -49,8 +49,7 @@ class CRUD:
 
     def delete(self, id: int) -> TableModel:
         resource = self.read(id)
-        self.update(UpdateModel(id=id), {"is_active": False})
-        return resource
+        return self.update(resource, {"is_active": False})
 
     def __read_active(self, id: int) -> TableModel:
         resource = self.session.exec(
