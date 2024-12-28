@@ -1,37 +1,157 @@
-from .model import VehicleCreate, VehicleUpdate, VehiclePublic
-from .make import router as make_router
-from .vehicle_model import router as vehicle_model_router
-from .service import Vehicle as VehicleService
+from .model import (
+    MakePublic,
+    MakeCreate,
+    MakeUpdate,
+    VehicleModelPublic,
+    VehicleModelCreate,
+    VehicleModelUpdate,
+    VehicleCreate,
+    VehicleUpdate,
+    VehiclePublic,
+    RequestPublic,
+    RequestCreateBody,
+)
+
+from .service import (
+    Make as MakeService,
+    VehicleModel as VehicleModelService,
+    Vehicle as VehicleService,
+    Request as RequestService,
+)
+
 from core.security import is_admin
 from fastapi import APIRouter, Depends
 
 
-router = APIRouter(
+make_router = APIRouter(
+    prefix="/makes",
+    tags=["makes"],
+    responses={404: {"description": "Not found"}},
+)
+
+model_router = APIRouter(
+    prefix="/models",
+    tags=["models"],
+    responses={404: {"description": "Not found"}},
+)
+
+
+vehicle_router = APIRouter(
     prefix="/vehicles",
     tags=["vehicles"],
     responses={404: {"description": "Not found"}},
 )
 
-router.include_router(make_router)
-router.include_router(vehicle_model_router)
+request_router = APIRouter(
+    prefix="/requests",
+    tags=["requests"],
+    responses={404: {"description": "Not found"}},
+)
 
-
+make_service = MakeService()
+model_service = VehicleModelService()
 vehicle_service = VehicleService()
+request_service = RequestService()
 
 
-@router.get("/{vehicle_id}", response_model=VehiclePublic)
+# Make routes
+
+
+@make_router.get("/{make_id}", response_model=MakePublic)
+async def read_make(make_id: int, service: MakeService = Depends(make_service)):
+    return service.read(make_id)
+
+
+@make_router.get("/", response_model=list[MakePublic])
+async def read_all_makes(service: MakeService = Depends(make_service)):
+    return service.read_all()
+
+
+@make_router.post("/", response_model=MakePublic)
+async def create_make(
+    body: MakeCreate,
+    service: MakeService = Depends(make_service),
+    is_admin: bool = Depends(is_admin),
+):
+    return service.create(body)
+
+
+@make_router.put("/", response_model=MakePublic)
+async def update_make(
+    body: MakeUpdate,
+    service: MakeService = Depends(make_service),
+    is_admin: bool = Depends(is_admin),
+):
+    return service.update(body)
+
+
+@make_router.delete("/{make_id}")
+async def delete_make(
+    make_id: int,
+    service: MakeService = Depends(make_service),
+    is_admin: bool = Depends(is_admin),
+):
+    return service.delete(make_id)
+
+
+# Model routes
+
+
+@model_router.get("/{model_id}", response_model=VehicleModelPublic)
+async def read_model(
+    model_id: int, service: VehicleModelService = Depends(model_service)
+):
+    return service.read(model_id)
+
+
+@model_router.get("/", response_model=list[VehicleModelPublic])
+async def read_all_models(service: VehicleModelService = Depends(model_service)):
+    return service.read_all()
+
+
+@model_router.post("/", response_model=VehicleModelPublic)
+async def create_model(
+    body: VehicleModelCreate,
+    service: VehicleModelService = Depends(model_service),
+    is_admin: bool = Depends(is_admin),
+):
+    return service.create(body)
+
+
+@model_router.put("/", response_model=VehicleModelPublic)
+async def update_model(
+    body: VehicleModelUpdate,
+    service: VehicleModelService = Depends(model_service),
+    is_admin: bool = Depends(is_admin),
+):
+    return service.update(body)
+
+
+@model_router.delete("/{model_id}")
+async def delete_model(
+    model_id: int,
+    service: VehicleModelService = Depends(model_service),
+    is_admin: bool = Depends(is_admin),
+):
+    return service.delete(model_id)
+
+
+# Vehicle routes
+
+
+@vehicle_router.get("/{vehicle_id}", response_model=VehiclePublic)
 async def read_vehicle(
     vehicle_id: int, service: VehicleService = Depends(vehicle_service)
 ):
     return service.read(vehicle_id)
 
 
-@router.get("/", response_model=list[VehiclePublic])
-async def read_all(service: VehicleService = Depends(vehicle_service)):
+@vehicle_router.get("/", response_model=list[VehiclePublic])
+async def read_all_vehicles(service: VehicleService = Depends(vehicle_service)):
     return service.read_all()
 
 
-@router.post("/", response_model=VehiclePublic)
+@vehicle_router.post("/", response_model=VehiclePublic)
 async def create_vehicle(
     body: VehicleCreate,
     service: VehicleService = Depends(vehicle_service),
@@ -39,7 +159,7 @@ async def create_vehicle(
     return service.create(body)
 
 
-@router.put("/", response_model=VehiclePublic)
+@vehicle_router.put("/", response_model=VehiclePublic)
 async def update_vehicle(
     body: VehicleUpdate,
     service: VehicleService = Depends(vehicle_service),
@@ -47,10 +167,26 @@ async def update_vehicle(
     return service.update(body)
 
 
-@router.delete("/{vehicle_id}", response_model=VehiclePublic)
+@vehicle_router.delete("/{vehicle_id}", response_model=VehiclePublic)
 async def delete_vehicle(
     vehicle_id: int,
     service: VehicleService = Depends(vehicle_service),
     is_admin: bool = Depends(is_admin),
 ):
     return service.delete(vehicle_id)
+
+
+# Request routes
+
+
+@request_router.post("/", response_model=RequestPublic)
+async def create_request(
+    body: RequestCreateBody,
+    service: RequestService = Depends(request_service),
+):
+    return service.create(body)
+
+
+vehicle_router.include_router(make_router)
+vehicle_router.include_router(model_router)
+vehicle_router.include_router(request_router)
