@@ -74,3 +74,23 @@ class VehicleStatus(str, Enum):
     SETTLED = "Settled"
     SEIZED = "Seized"
     STOLEN = "Stolen"
+
+
+class RequestStatus(str, Enum):
+    PENDING = "Pending"
+    IN_PROGRESS = "In Progress"
+    PAID = "Paid"
+    COMPLETED = "Completed"
+
+
+class RequestType(str, Enum):
+    LICENSE_PLATE = "License Plate"
+    ENDORSEMENT = "Endorsement"
+
+
+class DocumentRequestStatus(str, Enum):
+    UNKNOWN = "Unknown"
+    PENDING = "Pending"
+    IN_PROGRESS = "In Progress"
+    AVAILABLE = "Available"
+    DELIVERED = "Delivered"
