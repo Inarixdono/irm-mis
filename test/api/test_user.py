@@ -1,7 +1,7 @@
 from core.config import settings
 from fastapi.testclient import TestClient
 
-from ..helper import user_example
+from ..helper import assert_creation, user_example
 
 
 def test_first_user(client: TestClient, headers: dict):
@@ -12,8 +12,8 @@ def test_first_user(client: TestClient, headers: dict):
 
 def test_create_user(client: TestClient, headers: dict):
     response = client.post("/users/", json=user_example, headers=headers)
-    assert response.status_code == 200
-    assert response.json()["email"] == user_example["email"]
+    user_example.pop("password")
+    assert_creation(response, user_example)
 
 
 def test_read_all_users(client: TestClient, headers: dict):

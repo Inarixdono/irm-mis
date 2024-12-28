@@ -1,7 +1,7 @@
 from core.config import settings
 from fastapi.testclient import TestClient
 
-from ..helper import branch_example
+from ..helper import branch_example, assert_creation
 
 
 def test_first_branch(client: TestClient, headers: dict):
@@ -18,8 +18,7 @@ def test_read_all_branches(client: TestClient, headers: dict):
 
 def test_create_branch(client: TestClient, headers: dict):
     response = client.post("/branches/", json=branch_example, headers=headers)
-    assert response.status_code == 200
-    assert response.json()["name"] == branch_example["name"]
+    assert_creation(response, branch_example)
 
 
 def test_update_branch(client: TestClient, headers: dict):

@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 from core.types import Role
+from test.helper import assert_creation
 
 
 def test_first_role(client: TestClient, headers: dict):
@@ -9,9 +10,9 @@ def test_first_role(client: TestClient, headers: dict):
 
 
 def test_create_role(client: TestClient, headers: dict):
-    response = client.post("/roles/", json={"name": "new_role"}, headers=headers)
-    assert response.status_code == 200
-    assert response.json()["name"] == "new_role"
+    payload = {"name": "new_role"}
+    response = client.post("/roles/", json=payload, headers=headers)
+    assert_creation(response, payload)
 
 
 def test_update_role(client: TestClient, headers: dict):

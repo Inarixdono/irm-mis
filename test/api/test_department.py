@@ -1,6 +1,8 @@
 from core.types import Department
 from fastapi.testclient import TestClient
 
+from ..helper import assert_creation
+
 
 def test_first_department(client: TestClient, headers: dict):
     response = client.get("/departments/1", headers=headers)
@@ -9,15 +11,13 @@ def test_first_department(client: TestClient, headers: dict):
 
 
 def test_create_department(client: TestClient, headers: dict):
+    payload = {"name": "Test Department", "description": "Test Department Description"}
     response = client.post(
         "/departments/",
-        json={"name": "Test Department", "description": "Test Department Description"},
+        json=payload,
         headers=headers,
     )
-    assert response.status_code == 200
-    assert response.json()["name"] == "Test Department"
-    assert response.json()["created_by"] == 1
-    assert response.json()["created_at"] is not None
+    assert_creation(response, payload)
 
 
 def test_update_department(client: TestClient, headers: dict):

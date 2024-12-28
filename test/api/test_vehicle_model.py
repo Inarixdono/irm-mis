@@ -1,18 +1,10 @@
-from ..helper import model_example
+from ..helper import assert_creation, model_example
 from fastapi.testclient import TestClient
 
 
 def test_create_model(client: TestClient, headers: dict):
     response = client.post("/vehicles/models/", headers=headers, json=model_example)
-    assert response.status_code == 200
-    assert response.json()["name"] == model_example["name"]
-    assert response.json()["vehicle_type"] == model_example["vehicle_type"]
-    assert response.json()["make_id"] == model_example["make_id"]
-    assert response.json()["is_active"]
-    assert response.json()["created_by"] == 1
-    assert response.json()["created_at"] is not None
-    assert response.json()["updated_by"] is None
-    assert response.json()["updated_at"] is None
+    assert_creation(response, model_example)
 
 
 def test_read_model(client: TestClient, headers: dict):

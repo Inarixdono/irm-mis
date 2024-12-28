@@ -1,23 +1,11 @@
 from fastapi.testclient import TestClient
 
-from ..helper import customer_example
+from ..helper import customer_example, assert_creation
 
 
 def test_create_customer(client: TestClient, headers: dict):
     response = client.post("/customers/", json=customer_example, headers=headers)
-    assert response.status_code == 200
-    assert "id" in response.json()
-    assert response.json()["name"] == customer_example["name"]
-    assert response.json()["identity_number"] == customer_example["identity_number"]
-    assert response.json()["phone_number"] == customer_example["phone_number"]
-    assert response.json()["street"] == customer_example["street"]
-    assert response.json()["city"] == customer_example["city"]
-    assert response.json()["state"] == customer_example["state"]
-    assert response.json()["reference"] == customer_example["reference"]
-    assert response.json()["created_by"] == 1
-    assert response.json()["created_at"] is not None
-    assert response.json()["updated_by"] is None
-    assert response.json()["updated_at"] is None
+    assert_creation(response, customer_example)
 
 
 def test_read_all_customers(client: TestClient, headers: dict):
