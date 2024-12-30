@@ -86,3 +86,24 @@ def assert_creation(response: Response, expected: dict):
     response.pop("created_at")
 
     assert compare_dicts(response, expected)
+
+
+def assert_update(resource_before: dict, response: Response, changed_keys: list[str]):
+    resource_before.update({"updated_by": 1})
+
+    assert response.status_code == 200
+    resource_after: dict = response.json()
+
+    check_update(resource_before, resource_after, changed_keys)
+
+    assert compare_dicts(resource_after, resource_before)
+
+
+def check_update(resource_before: dict, resource_after: dict, changed_keys: list[str]):
+    assert resource_after["updated_at"] is not None
+    resource_after.pop("updated_at")
+
+    for key in changed_keys:
+        assert resource_after[key] != resource_before[key]
+        resource_after.pop(key)
+        resource_before.pop(key)
