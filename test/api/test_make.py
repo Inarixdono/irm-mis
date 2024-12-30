@@ -1,5 +1,6 @@
-from ..helper import assert_creation, make_example
 from fastapi.testclient import TestClient
+
+from ..helper import assert_creation, assert_update, make_example
 
 
 def test_create_make(client: TestClient, headers: dict):
@@ -32,13 +33,7 @@ def test_update_make(client: TestClient, headers: dict):
         "name": "Nissan",
     }
     response = client.put("/vehicles/makes/", json=payload, headers=headers)
-    make_after = response.json()
-    assert response.status_code == 200
-    assert make_before["name"] != make_after["name"]
-    assert make_after["created_by"] == 1
-    assert make_after["created_at"] == make_before["created_at"]
-    assert make_after["updated_by"] == 1
-    assert make_after["updated_at"] is not None
+    assert_update(make_before, response, ["name"])
 
 
 def test_delete_make(client: TestClient, headers: dict):

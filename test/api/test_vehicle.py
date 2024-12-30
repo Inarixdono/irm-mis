@@ -1,5 +1,6 @@
-from ..helper import assert_creation, vehicle_example
 from fastapi.testclient import TestClient
+
+from ..helper import assert_creation, assert_update, vehicle_example
 
 
 def test_create_vehicle(client: TestClient, headers: dict):
@@ -15,13 +16,11 @@ def test_read_vechicle(client: TestClient, headers: dict):
 
 
 def test_update_vehicle(client: TestClient, headers: dict):
+    vehicle_before: dict = client.get("/vehicles/1", headers=headers).json()
     response = client.put(
-        "/vehicles/", headers=headers, json={"id": 1, "price": 2000.00}
+        "/vehicles/", headers=headers, json={"id": 1, "price": 1500.00}
     )
-    assert response.status_code == 200
-    assert response.json()["price"] == 2000.00
-    assert response.json()["updated_at"]
-    assert response.json()["updated_by"] == 1
+    assert_update(vehicle_before, response, ["price"])
 
 
 def test_delete_vehicle(client: TestClient, headers: dict):

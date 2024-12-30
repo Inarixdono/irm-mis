@@ -1,7 +1,7 @@
 from core.config import settings
 from fastapi.testclient import TestClient
 
-from ..helper import assert_creation, user_example
+from ..helper import assert_creation, assert_update, user_example
 
 
 def test_first_user(client: TestClient, headers: dict):
@@ -30,7 +30,4 @@ def test_update_user(client: TestClient, headers: dict):
         "email": "getosuguru@spiritmanipulation.com",
     }
     response = client.put("/users/", json=payload, headers=headers)
-    user_after = response.json()
-    assert response.status_code == 200
-    assert user_before["email"] != user_after["email"]
-    assert user_after["updated_by"] == 1
+    assert_update(user_before, response, ["name", "email"])

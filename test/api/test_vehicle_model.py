@@ -1,5 +1,6 @@
-from ..helper import assert_creation, model_example
 from fastapi.testclient import TestClient
+
+from ..helper import assert_creation, assert_update, model_example
 
 
 def test_create_model(client: TestClient, headers: dict):
@@ -25,14 +26,7 @@ def test_update_model(client: TestClient, headers: dict):
     response = client.put(
         "/vehicles/models/", headers=headers, json={"id": 1, "name": "LEAD 110"}
     )
-    assert response.status_code == 200
-    assert response.json()["name"] != model_before["name"]
-    assert response.json()["vehicle_type"] == model_before["vehicle_type"]
-    assert response.json()["make_id"] == model_before["make_id"]
-    assert response.json()["created_by"] == model_before["created_by"]
-    assert response.json()["created_at"] == model_before["created_at"]
-    assert response.json()["updated_by"] == 1
-    assert response.json()["updated_at"] is not None
+    assert_update(model_before, response, ["name"])
 
 
 def test_delete_model(client: TestClient, headers: dict):
