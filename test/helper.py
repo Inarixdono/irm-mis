@@ -1,4 +1,4 @@
-from core.types import VehicleType
+from core.types import Role, Department, VehicleType
 from httpx import Response
 
 
@@ -26,8 +26,8 @@ user_example = {
     "identity_number": "40255632169",
     "email": "gojosatoru@infinitevoid.com",
     "branch_id": 1,
-    "role_id": 1,
-    "department_id": 1,
+    "role": Role.USER,
+    "department": Department.CUSTOMER_SERVICE,
     "password": "hollowtechniquepurple",
 }
 

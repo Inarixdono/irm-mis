@@ -43,6 +43,7 @@ class IdentityType(str, Enum):
 class Role(str, Enum):
     SUPERUSER = "Superuser"
     ADMIN = "Admin"
+    USER = "User"
     GUEST = "Guest"
 
 
