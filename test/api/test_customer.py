@@ -5,7 +5,9 @@ from ..helper import assert_update, customer_example, assert_creation
 
 def test_create_customer(client: TestClient, headers: dict):
     response = client.post("/customers/", json=customer_example, headers=headers)
-    assert_creation(response, customer_example)
+    expected_customer = customer_example.copy()
+    expected_customer.update({"branch_id": 1})
+    assert_creation(response, expected_customer)
 
 
 def test_read_all_customers(client: TestClient, headers: dict):

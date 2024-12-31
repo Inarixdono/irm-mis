@@ -17,7 +17,6 @@ class CustomerBase(SQLModel):
     phone_number: str = Field(
         min_length=10, max_length=10, unique=True, sa_type=CHAR(10)
     )
-    branch_id: int = Field(gt=0, foreign_key="branch.id")
 
 
 class CustomerCreate(Address, CustomerBase):
@@ -25,7 +24,8 @@ class CustomerCreate(Address, CustomerBase):
 
 
 class CustomerPublic(Audit, Address, CustomerBase, PublicModel):
-    pass
+    branch_id: int = Field(gt=0, foreign_key="branch.id")
+
 
 
 class CustomerUpdate(Address, CustomerBase, UpdateModel):
@@ -37,4 +37,5 @@ class CustomerUpdate(Address, CustomerBase, UpdateModel):
 
 
 class Customer(Audit, CustomerCreate, TableModel, table=True):
-    pass
+    branch_id: int = Field(gt=0, foreign_key="branch.id")
+

@@ -15,7 +15,6 @@ customer_example = {
     "identity_type": "national_id",
     "identity_number": "40255632169",
     "phone_number": "0000000000",
-    "branch_id": 1,
     "street": "JUJUTSU TECHNICAL COLLEGE",
     "city": "TOKYO",
     "state": "TOKYO",
