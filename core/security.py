@@ -38,6 +38,7 @@ def create_access_token(user: User, expires: timedelta | None = None):
             "email": user.email,
             "role": user.role.name,
             "department": user.department.name,
+            "branch_id": user.branch_id,
             "exp": expire,
         },
         key=settings.SECRET_KEY,
@@ -60,6 +61,7 @@ def get_current_user(
         email=payload.get("email"),
         role=payload.get("role"),
         department=payload.get("department"),
+        branch_id=payload.get("branch_id"),
     )
 
 
