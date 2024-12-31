@@ -44,7 +44,7 @@ class Make(Audit, MakeBase, TableModel, table=True):
 class VehicleModelBase(SQLModel):
     name: str = Field(max_length=64, unique=True, index=True)
     vehicle_type: VehicleType = VehicleType.MOTORCYCLE
-    make_id: int = Field(foreign_key="make.id")
+    make_id: int = Field(gt=0, foreign_key="make.id")
 
 
 class VehicleModelCreate(VehicleModelBase):
@@ -58,7 +58,7 @@ class VehicleModelPublic(Audit, VehicleModelBase, PublicModel):
 class VehicleModelUpdate(VehicleModelBase, UpdateModel):
     name: str | None = Field(default=None, max_length=64)
     vehicle_type: VehicleType | None = None
-    make_id: int | None = None
+    make_id: int | None = Field(default=None, gt=0)
 
 
 class VehicleModel(Audit, VehicleModelBase, TableModel, table=True):
@@ -70,7 +70,7 @@ class VehicleModel(Audit, VehicleModelBase, TableModel, table=True):
 
 class VehicleBase(SQLModel):
     vin: str = Field(max_length=32, unique=True, index=True)
-    model_id: int = Field(foreign_key="vehicle_model.id")
+    model_id: int = Field(gt=0, foreign_key="vehicle_model.id")
     year: int = Field(ge=1900)
     color: str = Field(max_length=32)
     engine_number: str | None = Field(
@@ -88,7 +88,7 @@ class VehicleBase(SQLModel):
     status: VehicleStatus = VehicleStatus.AVAILABLE
     is_new: bool = Field(default=True)
     inbound_date: datetime = Field(default=datetime.now())
-    owner_id: int | None = Field(default=None, foreign_key="customer.id")
+    owner_id: int | None = Field(default=None, gt=0, foreign_key="customer.id")
     branch_id: int = Field(gt=0, foreign_key="branch.id")
     note: str | None = Field(default=None, max_length=255)
 
@@ -103,7 +103,7 @@ class VehiclePublic(Audit, VehicleBase, PublicModel):
 
 class VehicleUpdate(VehicleBase, UpdateModel):
     vin: str | None = Field(default=None, max_length=32)
-    model_id: int | None = None
+    model_id: int | None = Field(default=None, gt=0)
     year: int | None = None
     color: str | None = Field(default=None, max_length=32)
     engine_number: str | None = Field(default=None, max_length=32)
@@ -123,14 +123,14 @@ class Vehicle(Audit, VehicleBase, TableModel, table=True):
 
 
 class RequestBase(SQLModel):
-    customer_id: int = Field(foreign_key="customer.id")
+    customer_id: int = Field(gt=0, foreign_key="customer.id")
     status: RequestStatus = RequestStatus.PENDING
     note: str | None = Field(default=None, max_length=255)
     completion_date: datetime | None = None
 
 
 class RequestCreate(SQLModel):
-    customer_id: int = Field(foreign_key="customer.id")
+    customer_id: int = Field(gt=0, foreign_key="customer.id")
     note: str | None = Field(default=None, max_length=255)
 
 
@@ -144,7 +144,7 @@ class RequestPublic(Audit, RequestBase, PublicModel):
 
 
 class RequestUpdate(RequestBase, UpdateModel):
-    client_id: int | None = None
+    client_id: int | None = Field(default=None, gt=0)
     status: RequestStatus | None = None
     note: str | None = Field(default=None, max_length=255)
     completion_date: datetime | None = None
@@ -158,7 +158,7 @@ class Request(Audit, RequestBase, TableModel, table=True):
 
 
 class VehicleRequestCreate(SQLModel):
-    vehicle_id: int = Field(foreign_key="vehicle.id")
+    vehicle_id: int = Field(gt=0, foreign_key="vehicle.id")
     request_type: RequestType = Field(primary_key=True)
     note: str | None = Field(default=None, max_length=255)
 
@@ -166,9 +166,9 @@ class VehicleRequestCreate(SQLModel):
 class VehicleRequest(SQLModel, table=True):
     __tablename__ = "vehicle_request"
     request_id: int | None = Field(
-        default=None, primary_key=True, foreign_key="request.id"
+        default=None, gt=0, primary_key=True, foreign_key="request.id"
     )
-    vehicle_id: int = Field(foreign_key="vehicle.id")
+    vehicle_id: int = Field(gt=0, foreign_key="vehicle.id")
     request_type: RequestType = Field(primary_key=True)
     status: DocumentRequestStatus = DocumentRequestStatus.PENDING
     note: str | None = Field(default=None, max_length=255)
