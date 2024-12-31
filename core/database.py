@@ -5,8 +5,7 @@ from typing import Annotated
 from fastapi import FastAPI, Depends
 from sqlmodel import SQLModel, Session, create_engine, select
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(settings.DATABASE_DEVELOPMENT, connect_args=connect_args)
+engine = create_engine(settings.DATABASE_DEVELOPMENT)
 
 
 def create_first_user(session: Session):
