@@ -89,7 +89,6 @@ class VehicleBase(SQLModel):
     is_new: bool = Field(default=True)
     inbound_date: datetime = Field(default=datetime.now())
     owner_id: int | None = Field(default=None, gt=0, foreign_key="customer.id")
-    branch_id: int = Field(gt=0, foreign_key="branch.id")
     note: str | None = Field(default=None, max_length=255)
 
 
@@ -98,7 +97,7 @@ class VehicleCreate(VehicleBase):
 
 
 class VehiclePublic(Audit, VehicleBase, PublicModel):
-    pass
+    branch_id: int = Field(gt=0, foreign_key="branch.id")
 
 
 class VehicleUpdate(VehicleBase, UpdateModel):
@@ -116,6 +115,8 @@ class VehicleUpdate(VehicleBase, UpdateModel):
 
 
 class Vehicle(Audit, VehicleBase, TableModel, table=True):
+    branch_id: int = Field(gt=0, foreign_key="branch.id")
+
     requests: list["VehicleRequest"] = Relationship(back_populates="vehicle")
 
 
@@ -151,7 +152,7 @@ class RequestUpdate(RequestBase, UpdateModel):
 
 
 class Request(Audit, RequestBase, TableModel, table=True):
-    detail: list["VehicleRequest"] = Relationship(back_populates="request")
+    vehicles: list["VehicleRequest"] = Relationship(back_populates="request")
 
 
 # Vehicle Request
@@ -169,10 +170,10 @@ class VehicleRequest(SQLModel, table=True):
         default=None, gt=0, primary_key=True, foreign_key="request.id"
     )
     vehicle_id: int = Field(gt=0, foreign_key="vehicle.id")
-    request_type: RequestType = Field(primary_key=True)
-    status: DocumentRequestStatus = DocumentRequestStatus.PENDING
-    note: str | None = Field(default=None, max_length=255)
-    delivery_date: datetime | None = None
+    plate_status: DocumentRequestStatus = DocumentRequestStatus.UNKNOWN
+    plate_delivery_date: datetime | None = None
+    registration_status: DocumentRequestStatus = DocumentRequestStatus.UNKNOWN
+    registration_delivery_date: datetime | None = None
 
-    request: "Request" = Relationship(back_populates="detail")
+    request: "Request" = Relationship(back_populates="vehicles")
     vehicle: "Vehicle" = Relationship(back_populates="requests")

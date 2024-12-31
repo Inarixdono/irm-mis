@@ -12,6 +12,7 @@ class TokenData(SQLModel):
     email: str = None
     role: str = None
     department: str = None
+    branch_id: int = None
 
 
 class Login(SQLModel):
