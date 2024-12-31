@@ -1,5 +1,6 @@
 from .model import (
     Make as MakeModel,
+    VehicleCreate,
     VehicleModel as VehicleModelTable,
     Vehicle as VehicleTable,
     Request as RequestModel,
@@ -33,6 +34,10 @@ class VehicleModel(CRUD):
 class Vehicle(CRUD):
     def __init__(self):
         super().__init__(VehicleTable)
+
+    def create(self, body: VehicleCreate) -> VehicleTable:
+        extra_data = {"branch_id": self.current_user.branch_id}
+        return super().create(body, extra_data)
 
 
 # Request
