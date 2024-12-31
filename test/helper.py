@@ -57,7 +57,6 @@ vehicle_example = {
     "status": "Available",
     "inbound_date": "2024-12-26T12:41:52.050083",
     "owner_id": 1,
-    "branch_id": 1,
     "note": "This is a note",
 }
 

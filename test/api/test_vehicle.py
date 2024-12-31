@@ -5,7 +5,9 @@ from ..helper import assert_creation, assert_update, vehicle_example
 
 def test_create_vehicle(client: TestClient, headers: dict):
     response = client.post("/vehicles/", headers=headers, json=vehicle_example)
-    assert_creation(response, vehicle_example)
+    expected_vehicle = vehicle_example.copy()
+    expected_vehicle.update({"branch_id": 1})
+    assert_creation(response, expected_vehicle)
 
 
 def test_read_vechicle(client: TestClient, headers: dict):
