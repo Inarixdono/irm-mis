@@ -17,7 +17,7 @@ class CustomerBase(SQLModel):
     phone_number: str = Field(
         min_length=10, max_length=10, unique=True, sa_type=CHAR(10)
     )
-    branch_id: int = Field(foreign_key="branch.id")
+    branch_id: int = Field(gt=0, foreign_key="branch.id")
 
 
 class CustomerCreate(Address, CustomerBase):
@@ -33,7 +33,7 @@ class CustomerUpdate(Address, CustomerBase, UpdateModel):
     identity_type: IdentityType | None = None
     identity_number: str | None = Field(default=None, min_length=8, max_length=14)
     phone_number: str | None = Field(default=None, min_length=10, max_length=10)
-    branch_id: int | None = None
+    branch_id: int | None = Field(default=None, gt=0)
 
 
 class Customer(Audit, CustomerCreate, TableModel, table=True):

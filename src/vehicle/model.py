@@ -89,7 +89,7 @@ class VehicleBase(SQLModel):
     is_new: bool = Field(default=True)
     inbound_date: datetime = Field(default=datetime.now())
     owner_id: int | None = Field(default=None, foreign_key="customer.id")
-    branch_id: int = Field(foreign_key="branch.id")
+    branch_id: int = Field(gt=0, foreign_key="branch.id")
     note: str | None = Field(default=None, max_length=255)
 
 
@@ -112,7 +112,7 @@ class VehicleUpdate(VehicleBase, UpdateModel):
     status: VehicleStatus | None = None
     is_new: bool | None = None
     inbound_date: datetime | None = None
-    branch_id: int | None = None
+    branch_id: int | None = Field(default=None, gt=0)
 
 
 class Vehicle(Audit, VehicleBase, TableModel, table=True):
