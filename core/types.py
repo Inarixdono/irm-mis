@@ -24,9 +24,9 @@ class Address:
 
 class Audit:
     is_active: bool = True
-    created_by: int | None = Field(default=None)
+    created_by: int | None = Field(default=None, gt=0)
     created_at: datetime = Field(default=datetime.now())
-    updated_by: int | None = None
+    updated_by: int | None = Field(default=None, gt=0)
     updated_at: datetime | None = None
 
 
