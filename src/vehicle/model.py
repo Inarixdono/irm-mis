@@ -11,7 +11,7 @@ from core.types import (
 )
 
 from datetime import datetime
-from sqlalchemy import CHAR, DOUBLE
+from sqlalchemy import CHAR, DOUBLE_PRECISION
 from sqlmodel import SQLModel, Field, Relationship
 
 
@@ -84,7 +84,7 @@ class VehicleBase(SQLModel):
         index=True,
         sa_type=CHAR(8),
     )
-    price: float = Field(ge=0.0, sa_type=DOUBLE)
+    price: float = Field(ge=0.0, sa_type=DOUBLE_PRECISION)
     status: VehicleStatus = VehicleStatus.AVAILABLE
     is_new: bool = Field(default=True)
     inbound_date: datetime = Field(default=datetime.now())
