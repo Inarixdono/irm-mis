@@ -33,7 +33,7 @@ class CRUD:
         ).all()
 
     def create(self, model_create: SQLModel, extra_data: dict = {}) -> TableModel:
-        resource = self.__validate_model(model_create, extra_data)
+        resource = self.__validate(model_create, extra_data)
         return self.__commit(resource)
 
     def update(self, model_update: UpdateModel, update_data: dict = {}) -> TableModel:
@@ -58,9 +58,9 @@ class CRUD:
 
         return resource
 
-    def __validate_model(self, incoming_data: SQLModel, extra_data: dict) -> TableModel:
+    def __validate(self, model: SQLModel, extra_data: dict) -> TableModel:
         self.__audit_create(extra_data)
-        return self.base_model.model_validate(incoming_data, update=extra_data)
+        return self.base_model.model_validate(model, update=extra_data)
 
     def __set_update_data(self, incoming_data: UpdateModel, extra_data: dict) -> dict:
         self.__audit_update(extra_data)
@@ -77,5 +77,9 @@ class CRUD:
     def __commit(self, resource) -> TableModel:
         self.session.add(resource)
         self.session.commit()
+        self.__refresh(resource)
+        return resource
+
+    def __refresh(self, resource) -> TableModel:
         self.session.refresh(resource)
         return resource
