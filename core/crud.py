@@ -36,6 +36,10 @@ class CRUD:
         resource = self.__validate(model_create, extra_data)
         return self.__commit(resource)
 
+    def create_all(self, models_create: list[SQLModel]) -> list[TableModel]:
+        resources = self.__validate_all(models_create)
+        return self.__commit_all(resources)
+
     def update(self, model_update: UpdateModel, update_data: dict = {}) -> TableModel:
         resource = self.read(model_update.id)
         update_fields = self.__set_update_data(model_update, update_data)
@@ -58,7 +62,10 @@ class CRUD:
 
         return resource
 
-    def __validate(self, model: SQLModel, extra_data: dict) -> TableModel:
+    def __validate_all(self, models: list[SQLModel]) -> list[TableModel]:
+        return list(map(self.__validate, models))
+
+    def __validate(self, model: SQLModel, extra_data: dict = {}) -> TableModel:
         self.__audit_create(extra_data)
         return self.base_model.model_validate(model, update=extra_data)
 
@@ -74,11 +81,20 @@ class CRUD:
             {"updated_by": self.current_user.id, "updated_at": datetime.now()}
         )
 
+    def __commit_all(self, resources: list[TableModel]) -> list[TableModel]:
+        self.session.add_all(resources)
+        self.session.commit()
+        return resources
+
     def __commit(self, resource) -> TableModel:
         self.session.add(resource)
         self.session.commit()
         self.__refresh(resource)
         return resource
+
+    def __refresh_all(self, resources: list[TableModel]) -> list[TableModel]:
+        for resource in resources:
+            self.__refresh(resource)
 
     def __refresh(self, resource) -> TableModel:
         self.session.refresh(resource)
