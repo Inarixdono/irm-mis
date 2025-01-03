@@ -2,7 +2,7 @@ from core.security import is_admin
 from typing import Annotated
 from src.customer.model import CustomerCreate, CustomerUpdate, CustomerPublic
 from src.customer.service import Customer as CustomerService
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile
 
 router = APIRouter(
     prefix="/customers",
@@ -30,6 +30,13 @@ async def create_customer(
     body: CustomerCreate, service: Annotated[CustomerService, Depends(customer_service)]
 ):
     return service.create(body)
+
+@router.post("/from_csv", response_model=list[CustomerPublic])
+async def create_customers_from(
+    csv: UploadFile,
+    service: Annotated[CustomerService, Depends(customer_service)],
+):
+    return await service.create_all(csv)
 
 
 @router.put("/", response_model=CustomerPublic)
