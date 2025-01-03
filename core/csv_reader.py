@@ -6,6 +6,7 @@ class CSVReader:
     async def get_content(self, file: UploadFile):
         self.file = file
         reader = await self.__read()
+        next(reader)
         return [line for line in reader]
 
     async def __read(self):
