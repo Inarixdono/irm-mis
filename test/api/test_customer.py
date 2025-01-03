@@ -1,6 +1,7 @@
+from test.helper import assert_creation
+from test.helper import assert_update
+from test.helper import customer_example
 from fastapi.testclient import TestClient
-
-from ..helper import assert_update, customer_example, assert_creation
 
 
 def test_create(client: TestClient, headers: dict):
@@ -16,8 +17,11 @@ def test_read_all(client: TestClient, headers: dict):
     assert len(response.json()) == 1
 
 
-def test_create_all(client: TestClient, headers: dict):
-    pass
+def test_create_all(client: TestClient, customers_csv: str, headers: dict):
+    csv = {"csv": ("customers.csv", customers_csv, "text/csv")}
+    response = client.post("/customers/from_csv", files=csv, headers=headers)
+    assert response.status_code == 200
+    assert len(response.json()) == 3
 
 
 def test_update(client: TestClient, headers: dict):
