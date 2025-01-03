@@ -56,3 +56,9 @@ def crud(session: Session, current_user: TokenData) -> Generator[CRUD, None, Non
 @pytest.fixture(scope="session", autouse=True)
 def headers(token: Token) -> dict:
     return {"Authorization": f"Bearer {token.access_token}"}
+
+
+@pytest.fixture(scope="session")
+def customers_csv() -> str:
+    with open("test/data/customers.csv") as file:
+        return file.read()
