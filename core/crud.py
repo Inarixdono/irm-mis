@@ -81,21 +81,20 @@ class CRUD:
             {"updated_by": self.current_user.id, "updated_at": datetime.now()}
         )
 
-    def __commit_all(self, resources: list[TableModel]) -> list[TableModel]:
-        self.session.add_all(resources)
+    def __commit(
+        self, resource: TableModel | list[TableModel], bulk: bool = False
+    ) -> TableModel | list[TableModel]:
+        if not bulk:
+            self.session.add(resource)
+        else:
+            self.session.add_all(resource)
+
         self.session.commit()
-        return resources
 
-    def __commit(self, resource) -> TableModel:
-        self.session.add(resource)
-        self.session.commit()
-        self.__refresh(resource)
-        return resource
+        if not bulk:
+            self.session.refresh(resource)
+        else:
+            for r in resource:
+                self.session.refresh(r)
 
-    def __refresh_all(self, resources: list[TableModel]) -> list[TableModel]:
-        for resource in resources:
-            self.__refresh(resource)
-
-    def __refresh(self, resource) -> TableModel:
-        self.session.refresh(resource)
         return resource
