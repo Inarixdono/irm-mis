@@ -31,12 +31,14 @@ async def create_customer(
 ):
     return service.create(body)
 
+
 @router.post("/from_csv", response_model=list[CustomerPublic])
 async def create_customers_from(
     csv: UploadFile,
     service: Annotated[CustomerService, Depends(customer_service)],
+    is_admin: bool = Depends(is_admin),
 ):
-    return await service.create_all(csv)
+    return service.create_all(csv.file)
 
 
 @router.put("/", response_model=CustomerPublic)
