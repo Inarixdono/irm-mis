@@ -62,9 +62,6 @@ class CRUD:
 
         return resource
 
-    def __validate_all(self, models: list[SQLModel]) -> list[TableModel]:
-        return list(map(self.__validate, models))
-
     def __validate(self, model: SQLModel, extra_data: dict = {}) -> TableModel:
         self.__audit_create(extra_data)
         return self.base_model.model_validate(model, update=extra_data)
