@@ -36,9 +36,9 @@ class CRUD:
         resource = self.__validate(model_create, extra_data)
         return self.__commit(resource)
 
-    def create_all(self, models_create: list[SQLModel]) -> list[TableModel]:
-        resources = self.__validate_all(models_create)
-        return self.__commit_all(resources)
+    def create_all(self, models: list[SQLModel]) -> list[TableModel]:
+        resources = [self.__validate(model) for model in models]
+        return self.__commit(resources, bulk=True)
 
     def update(self, model_update: UpdateModel, update_data: dict = {}) -> TableModel:
         resource = self.read(model_update.id)
