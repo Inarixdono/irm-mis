@@ -1,5 +1,5 @@
 from src.user.controller import router as user_router
-from src.branch.controller import router as branch_router
+from src.branch import branch_router
 from src.customer.controller import router as customer_controller
 from src.vehicle.controller import vehicle_router
 from fastapi import APIRouter

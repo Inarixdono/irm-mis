@@ -11,7 +11,7 @@ engine = create_engine(settings.DATABASE_DEVELOPMENT)
 def create_first_user(session: Session):
     from core.types import Role, Department
     from core.security import get_password_hash
-    from src.branch.model import Branch
+    from src.branch import Branch
 
     password_hash = get_password_hash(settings.SUPERUSER_PASSWORD)
 

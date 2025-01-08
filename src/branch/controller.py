@@ -1,6 +1,8 @@
 from core.security import is_admin
-from src.branch.model import BranchCreate, BranchPublic, BranchUpdate
-from src.branch.service import Branch as BranchService
+from .model import BranchCreate
+from .model import BranchUpdate
+from .model import BranchPublic
+from .service import Branch as BranchService
 from typing import Annotated
 from fastapi import APIRouter, Depends
 
