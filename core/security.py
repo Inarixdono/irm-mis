@@ -6,7 +6,7 @@ from core.exceptions import (
     InvalidCredentialsException,
 )
 from core.types import Role
-from src.auth.model import TokenData
+from src.auth import TokenData
 from src.user.model import User
 from typing import Annotated
 from passlib.context import CryptContext

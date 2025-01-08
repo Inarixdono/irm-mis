@@ -3,7 +3,8 @@ from app import app
 from core.config import settings
 from core.crud import CRUD
 from core.security import get_current_user
-from src.auth.model import Token, TokenData
+from src.auth import Token
+from src.auth import TokenData
 from core.database import engine, create_first_user
 from collections.abc import Generator
 from fastapi.testclient import TestClient

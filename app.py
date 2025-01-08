@@ -1,6 +1,6 @@
 from core.database import init_db
 from core.error_handler import integrity_error_handler
-from src.auth.controller import router as auth_router
+from src.auth import auth_router
 from api import api_router
 from fastapi import FastAPI
 from sqlalchemy.exc import IntegrityError

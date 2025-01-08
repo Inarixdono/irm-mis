@@ -1,6 +1,7 @@
 from core.config import settings
 from core.types import Department, Role
-from src.auth.model import Token, TokenData
+from src.auth import Token
+from src.auth import TokenData
 
 
 def test_login(token: Token):
