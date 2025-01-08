@@ -1,6 +1,8 @@
 from ..helper import customer_example
 from core.crud import CRUD
-from src.customer.model import Customer, CustomerCreate, CustomerUpdate
+from src.customer import CustomerCreate
+from src.customer import CustomerUpdate
+from src.customer import Customer
 
 
 def test_create_customer(crud: CRUD):

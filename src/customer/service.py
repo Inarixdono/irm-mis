@@ -1,6 +1,7 @@
 from typing import Iterable
 from fastapi import UploadFile
-from .model import Customer as CustomerModel, CustomerCreate
+from .model import CustomerCreate
+from .model import Customer as CustomerModel
 from core.crud import CRUD
 from core.csv_reader import CSVReader
 

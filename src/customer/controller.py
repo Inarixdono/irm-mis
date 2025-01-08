@@ -1,7 +1,9 @@
 from core.security import is_admin
 from typing import Annotated
-from src.customer.model import CustomerCreate, CustomerUpdate, CustomerPublic
-from src.customer.service import Customer as CustomerService
+from .model import CustomerCreate
+from .model import CustomerUpdate
+from .model import CustomerPublic
+from .service import Customer as CustomerService
 from fastapi import APIRouter, Depends, UploadFile
 
 router = APIRouter(
