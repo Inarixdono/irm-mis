@@ -1,5 +1,5 @@
 from core.config import settings
-from src.user.model import User
+from src.user import User
 from contextlib import asynccontextmanager
 from typing import Annotated
 from fastapi import FastAPI, Depends

@@ -1,4 +1,4 @@
-from src.user.controller import router as user_router
+from src.user import user_router
 from src.branch import branch_router
 from src.customer import customer_router
 from src.vehicle.controller import vehicle_router

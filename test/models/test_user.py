@@ -3,7 +3,9 @@ from core.crud import CRUD
 from core.security import get_password_hash
 from src.customer import Customer
 from src.branch import Branch
-from src.user.model import User, UserCreate, UserUpdate
+from src.user import User
+from src.user import UserCreate
+from src.user import UserUpdate
 
 from ..helper import customer_example, user_example
 

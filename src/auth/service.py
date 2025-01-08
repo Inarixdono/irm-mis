@@ -4,7 +4,7 @@ from core.config import settings
 from core.database import SessionDependency
 from core.exceptions import InvalidUserException
 from core.security import create_access_token, verify_password
-from src.user.model import User
+from src.user import User
 from sqlmodel import select
 
 

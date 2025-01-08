@@ -7,7 +7,7 @@ from core.exceptions import (
 )
 from core.types import Role
 from src.auth import TokenData
-from src.user.model import User
+from src.user import User
 from typing import Annotated
 from passlib.context import CryptContext
 from fastapi import Depends

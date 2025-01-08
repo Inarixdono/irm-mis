@@ -1,5 +1,6 @@
-from .model import UserCreate, UserUpdate, User as UserModel
-
+from .model import UserCreate
+from .model import UserUpdate
+from .model import User as UserModel
 from core.crud import CRUD
 from core.security import get_password_hash
 
