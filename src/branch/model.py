@@ -5,7 +5,7 @@ from sqlmodel import Field, Relationship
 
 
 if TYPE_CHECKING:
-    from ..user.model import User
+    from src.user import User
 
 
 class BranchBase(SQLModel):

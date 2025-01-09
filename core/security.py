@@ -1,13 +1,9 @@
 import jwt
-from datetime import datetime, timedelta, timezone
 from core.config import settings
-from core.exceptions import (
-    InsufficientPermissionsException,
-    InvalidCredentialsException,
-)
+from core.exceptions import InsufficientPermissionsException
+from core.exceptions import InvalidCredentialsException
 from core.types import Role
 from src.auth import TokenData
-from src.user.model import User
 from typing import Annotated
 from passlib.context import CryptContext
 from fastapi import Depends
@@ -24,26 +20,6 @@ def verify_password(plain_password: str, hashed_password: str):
 
 def get_password_hash(password: str):
     return pwd_context.hash(password)
-
-
-def create_access_token(user: User, expires: timedelta | None = None):
-    if expires:
-        expire = datetime.now(timezone.utc) + expires
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    return jwt.encode(
-        payload={
-            "id": user.id,
-            "name": user.name,
-            "email": user.email,
-            "role": user.role,
-            "department": user.department,
-            "branch_id": user.branch_id,
-            "exp": expire,
-        },
-        key=settings.SECRET_KEY,
-        algorithm=settings.ALGORITHM,
-    )
 
 
 def get_current_user(
