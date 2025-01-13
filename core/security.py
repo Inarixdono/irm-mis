@@ -1,8 +1,6 @@
-import jwt
-from core.config import settings
 from core.exceptions import InsufficientPermissionsException
-from core.exceptions import InvalidCredentialsException
 from core.types import Role
+from security import JWTManager
 from src.auth import TokenData
 from typing import Annotated
 from fastapi import Depends
@@ -15,12 +13,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
 ) -> TokenData:
-    try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
-    except jwt.InvalidTokenError:
-        raise InvalidCredentialsException()
+    payload = JWTManager.decode(token)
     return TokenData(
         id=payload.get("id"),
         name=payload.get("name"),
