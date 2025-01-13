@@ -1,6 +1,6 @@
 from core.config import settings
 from core.crud import CRUD
-from core.security import get_password_hash
+from security import PasswordHasher
 from src.customer import Customer
 from src.branch import Branch
 from src.user import UserCreate
@@ -21,7 +21,7 @@ def test_create_user(crud: CRUD):
         UserCreate(**user_example),
         extra_data={
             "info": Customer(**customer_example).sqlmodel_update({"created_by": 1}),
-            "password": get_password_hash(plain_password),
+            "password": PasswordHasher.get_password_hash(plain_password),
         },
     )
 
@@ -50,7 +50,7 @@ def test_update_user(crud: CRUD):
         UserUpdate(
             id=2,
             email="getosuguru@spiritmanipulation.com",
-            password=get_password_hash("jureisoujutsuuzumaki"),
+            password=PasswordHasher.get_password_hash("jureisoujutsuuzumaki"),
         ),
     )
 
