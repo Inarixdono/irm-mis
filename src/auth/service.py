@@ -1,5 +1,5 @@
-import jwt
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
+from security import JWTManager
 from .model import Token
 from core.config import settings
 from core.database import SessionDependency
@@ -19,7 +19,7 @@ class Auth:
         if not user:
             raise InvalidUserException()
         token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        token = self.__create_token(
+        token = JWTManager.create_token(
             user=user,
             expires=token_expires,
         )
@@ -36,22 +36,3 @@ class Auth:
 
     def __get_user(self, email: str) -> User:
         return self.session.exec(select(User).where(User.email == email)).first()
-
-    def __create_token(self, user: User, expires: timedelta | None = None):
-        if expires:
-            expire = datetime.now(timezone.utc) + expires
-        else:
-            expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-        return jwt.encode(
-            payload={
-                "id": user.id,
-                "name": user.name,
-                "email": user.email,
-                "role": user.role,
-                "department": user.department,
-                "branch_id": user.branch_id,
-                "exp": expire,
-            },
-            key=settings.SECRET_KEY,
-            algorithm=settings.ALGORITHM,
-        )
