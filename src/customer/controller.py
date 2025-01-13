@@ -1,4 +1,4 @@
-from core.security import is_admin
+from core.dependencies import is_admin
 from typing import Annotated
 from .model import CustomerCreate
 from .model import CustomerUpdate

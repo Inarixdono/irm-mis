@@ -75,3 +75,4 @@ def is_admin(user: Annotated[TokenData, Depends(get_current_user)]):
     if user.role not in [Role.SUPERUSER, Role.ADMIN]:
         raise InsufficientPermissionsException()
     return True
+

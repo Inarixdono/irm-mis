@@ -1,19 +1,20 @@
 from core.config import settings
-from src.user import User
 from contextlib import asynccontextmanager
 from typing import Annotated
 from fastapi import FastAPI, Depends
 from sqlmodel import SQLModel, Session, create_engine, select
+
 
 engine = create_engine(settings.DATABASE_DEVELOPMENT)
 
 
 def create_first_user(session: Session):
     from core.types import Role, Department
-    from core.security import get_password_hash
+    from security import PasswordHasher
+    from src.user import User
     from src.branch import Branch
 
-    password_hash = get_password_hash(settings.SUPERUSER_PASSWORD)
+    password_hash = PasswordHasher.get_password_hash(settings.SUPERUSER_PASSWORD)
 
     user = User(
         name=settings.SUPERUSER_NAME,
@@ -22,7 +23,7 @@ def create_first_user(session: Session):
         password=password_hash,
         branch=Branch(name=settings.SUPERUSER_BRANCH),
         department=Department.DEVELOPMENT,
-        role=Role.SUPERUSER
+        role=Role.SUPERUSER,
     )
 
     session.add(user)
@@ -31,6 +32,8 @@ def create_first_user(session: Session):
 
 
 def init():
+    from src.user import User
+
     with Session(engine) as session:
         user = session.exec(
             select(User).where(User.email == settings.SUPERUSER_EMAIL)

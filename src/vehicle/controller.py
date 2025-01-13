@@ -1,25 +1,19 @@
-from .model import (
-    MakePublic,
-    MakeCreate,
-    MakeUpdate,
-    VehicleModelPublic,
-    VehicleModelCreate,
-    VehicleModelUpdate,
-    VehicleCreate,
-    VehicleUpdate,
-    VehiclePublic,
-    RequestPublic,
-    RequestCreateBody,
-)
-
-from .service import (
-    Make as MakeService,
-    VehicleModel as VehicleModelService,
-    Vehicle as VehicleService,
-    Request as RequestService,
-)
-
-from core.security import is_admin
+from .model import MakePublic
+from .model import MakeCreate
+from .model import MakeUpdate
+from .model import VehicleModelPublic
+from .model import VehicleModelCreate
+from .model import VehicleModelUpdate
+from .model import VehicleCreate
+from .model import VehicleUpdate
+from .model import VehiclePublic
+from .model import RequestPublic
+from .model import RequestCreateBody
+from .service import Make as MakeService
+from .service import VehicleModel as VehicleModelService
+from .service import Vehicle as VehicleService
+from .service import Request as RequestService
+from core.dependencies import is_admin
 from fastapi import APIRouter, Depends
 
 

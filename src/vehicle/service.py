@@ -1,14 +1,11 @@
-from .model import (
-    Make as MakeModel,
-    VehicleCreate,
-    VehicleModel as VehicleModelTable,
-    Vehicle as VehicleTable,
-    Request as RequestModel,
-    RequestCreateBody,
-    VehicleRequest,
-    VehicleRequestCreate,
-)
-
+from .model import Make as MakeModel
+from .model import VehicleCreate
+from .model import VehicleModel as VehicleModelTable
+from .model import Vehicle as VehicleTable
+from .model import Request as RequestModel
+from .model import RequestCreateBody
+from .model import VehicleRequest
+from .model import VehicleRequestCreate
 from core.crud import CRUD
 
 

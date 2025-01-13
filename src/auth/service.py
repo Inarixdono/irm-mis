@@ -1,9 +1,8 @@
-from datetime import timedelta
+from security import JWTManager
 from .model import Token
-from core.config import settings
 from core.database import SessionDependency
 from core.exceptions import InvalidUserException
-from core.security import create_access_token, verify_password
+from security import PasswordHasher
 from src.user import User
 from sqlmodel import select
 
@@ -17,11 +16,7 @@ class Auth:
 
         if not user:
             raise InvalidUserException()
-        token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        token = create_access_token(
-            user=user,
-            expires=token_expires,
-        )
+        token = JWTManager.create_token(user)
 
         return Token(access_token=token, token_type="bearer")
 
@@ -29,7 +24,7 @@ class Auth:
         user = self.__get_user(email)
         if not user:
             return False
-        if not verify_password(password, user.password):
+        if not PasswordHasher.verify_password(password, user.password):
             raise InvalidUserException()
         return user
 

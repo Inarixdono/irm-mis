@@ -1,4 +1,4 @@
-from core.security import is_admin
+from core.dependencies import is_admin
 from .model import BranchCreate
 from .model import BranchUpdate
 from .model import BranchPublic

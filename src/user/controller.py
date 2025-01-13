@@ -2,7 +2,7 @@ from .model import UserCreate
 from .model import UserUpdate
 from .model import UserPublic
 from .service import User as UserService
-from core.security import is_admin
+from core.dependencies import is_admin
 from typing import Annotated
 from fastapi import APIRouter, Depends
 
