@@ -5,21 +5,11 @@ from core.exceptions import InvalidCredentialsException
 from core.types import Role
 from src.auth import TokenData
 from typing import Annotated
-from passlib.context import CryptContext
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
-
-def verify_password(plain_password: str, hashed_password: str):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str):
-    return pwd_context.hash(password)
 
 
 def get_current_user(
