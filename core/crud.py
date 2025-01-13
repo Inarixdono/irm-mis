@@ -1,5 +1,5 @@
 from core.database import SessionDependency, SQLModel
-from core.security import get_current_user
+from core.dependencies import get_current_user
 from core.types import Auditable, TableModel, UpdateModel
 from src.auth import TokenData
 from typing import Annotated

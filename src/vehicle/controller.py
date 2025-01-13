@@ -13,7 +13,7 @@ from .service import Make as MakeService
 from .service import VehicleModel as VehicleModelService
 from .service import Vehicle as VehicleService
 from .service import Request as RequestService
-from core.security import is_admin
+from core.dependencies import is_admin
 from fastapi import APIRouter, Depends
 
 
