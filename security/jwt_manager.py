@@ -15,11 +15,9 @@ class JWTManager:
     __ALGORITHM = "HS256"
 
     @classmethod
-    def create_token(cls, user: "User", expires: timedelta | None = None) -> str:
-        if expires:
-            expire = datetime.now(timezone.utc) + expires
-        else:
-            expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    def create_token(cls, user: "User") -> str:
+        expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+
         return jwt.encode(
             payload={
                 "id": user.id,
@@ -28,7 +26,7 @@ class JWTManager:
                 "role": user.role,
                 "department": user.department,
                 "branch_id": user.branch_id,
-                "exp": expire,
+                "exp": datetime.now(timezone.utc) + expires,
             },
             key=settings.SECRET_KEY,
             algorithm=cls.__ALGORITHM,
